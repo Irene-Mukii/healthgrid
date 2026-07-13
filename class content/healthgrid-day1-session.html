@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HealthGrid — Day 1 Build Session</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f0e;
+  --bg2: #131614;
+  --bg3: #191c1a;
+  --bg4: #1f2420;
+  --border: #2a2f2c;
+  --border2: #353b37;
+  --text: #e8ede9;
+  --text2: #9ba89d;
+  --text3: #606b62;
+  --green: #4ade80;
+  --green-dim: #1a3d28;
+  --green-mid: #2d6644;
+  --amber: #fbbf24;
+  --amber-dim: #3d2f0a;
+  --red: #f87171;
+  --red-dim: #3d1414;
+  --blue: #60a5fa;
+  --blue-dim: #0f2540;
+  --purple: #a78bfa;
+  --purple-dim: #1e1540;
+  --cyan: #22d3ee;
+  --cyan-dim: #062830;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+/* ── HEADER ── */
+.site-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  position: sticky;
+  top: 0;
+  background: rgba(13,15,14,0.96);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+}
+
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.05em;
+}
+
+.header-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: var(--green-dim);
+  color: var(--green);
+  letter-spacing: 0.08em;
+}
+
+.header-nav {
+  margin-left: auto;
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.header-nav a {
+  font-size: 12px;
+  color: var(--text3);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 5px;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+}
+.header-nav a:hover { background: var(--bg3); color: var(--text2); }
+
+/* ── HERO ── */
+.hero {
+  padding: 4rem 2rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-label::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--green);
+}
+
+.hero-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 1.25rem;
+  color: var(--text);
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--green);
+  font-weight: 300;
+}
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--text2);
+  max-width: 620px;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-val {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+}
+
+/* ── LAYOUT ── */
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+/* ── SECTION ── */
+.section {
+  padding: 3.5rem 0 0;
+  scroll-margin-top: 4rem;
+}
+
+.section-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.eyebrow-line {
+  display: inline-block;
+  width: 16px;
+  height: 1px;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: var(--text2);
+  margin-bottom: 2rem;
+  max-width: 640px;
+}
+
+hr.section-rule {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+/* ── CALLOUTS ── */
+.callout {
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  border: 1px solid;
+}
+
+.callout-green { background: var(--green-dim); border-color: var(--green-mid); }
+.callout-amber { background: var(--amber-dim); border-color: #8b6500; }
+.callout-red { background: var(--red-dim); border-color: #7a2020; }
+.callout-blue { background: var(--blue-dim); border-color: #1a4a80; }
+
+.callout-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+.ct-green { color: var(--green); }
+.ct-amber { color: var(--amber); }
+.ct-red { color: var(--red); }
+.ct-blue { color: var(--blue); }
+
+.callout p { font-size: 14px; color: var(--text2); margin-bottom: 0; line-height: 1.65; }
+.callout p + p { margin-top: 0.6rem; }
+.callout strong { color: var(--text); }
+
+/* ── PROSE ── */
+.prose {
+  color: var(--text2);
+  font-size: 15px;
+  line-height: 1.75;
+  max-width: 720px;
+}
+.prose + .prose { margin-top: 1rem; }
+.prose strong { color: var(--text); }
+.prose em { color: var(--green); font-style: normal; font-weight: 500; }
+
+/* ── TIMELINE BLOCKS (hour plan) ── */
+.timeline {
+  border-left: 2px solid var(--border2);
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tl-item {
+  position: relative;
+  padding-bottom: 2rem;
+}
+.tl-item:last-child { padding-bottom: 0; }
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -1.6rem;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid;
+  background: var(--bg);
+}
+
+.tl-green::before { border-color: var(--green); }
+.tl-amber::before { border-color: var(--amber); }
+.tl-blue::before { border-color: var(--blue); }
+.tl-purple::before { border-color: var(--purple); }
+.tl-red::before { border-color: var(--red); }
+
+.tl-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+}
+.tl-green .tl-time { color: var(--green); }
+.tl-amber .tl-time { color: var(--amber); }
+.tl-blue .tl-time { color: var(--blue); }
+.tl-purple .tl-time { color: var(--purple); }
+.tl-red .tl-time { color: var(--red); }
+
+.tl-heading {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.tl-body {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ── VIBE vs MANUAL CARDS ── */
+.vibe-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+@media (max-width: 600px) {
+  .vibe-grid { grid-template-columns: 1fr; }
+}
+
+.vibe-col {
+  padding: 1.25rem;
+  background: var(--bg2);
+}
+
+.vibe-col-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+.vcl-ai { color: var(--amber); }
+.vcl-manual { color: var(--green); }
+
+.vibe-list {
+  list-style: none;
+  font-size: 13px;
+  color: var(--text2);
+}
+.vibe-list li {
+  padding: 4px 0;
+  padding-left: 1.1rem;
+  position: relative;
+}
+.vibe-list li::before {
+  position: absolute;
+  left: 0;
+  font-size: 11px;
+}
+.vibe-col:first-child .vibe-list li::before { content: '⚡'; }
+.vibe-col:last-child .vibe-list li::before { content: '→'; color: var(--green); }
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 1.25rem 0;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+}
+
+.code-lang {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.code-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text2);
+  margin-left: auto;
+}
+
+.code-body {
+  padding: 1.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-x: auto;
+  color: #c9d1d9;
+}
+
+.c-comment { color: #484f58; font-style: italic; }
+.c-green { color: #7ee787; }
+.c-blue { color: #79c0ff; }
+.c-amber { color: #e3b341; }
+.c-purple { color: #d2a8ff; }
+.c-red { color: #ff7b72; }
+.c-cyan { color: #a5d6ff; }
+.c-string { color: #a8daff; }
+
+/* ── CARD GRIDS ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.card {
+  background: var(--bg2);
+  padding: 1.25rem;
+}
+
+.card-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.ctag-green { color: var(--green); }
+.ctag-amber { color: var(--amber); }
+.ctag-red { color: var(--red); }
+.ctag-blue { color: var(--blue); }
+.ctag-purple { color: var(--purple); }
+
+.card-heading {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.card-body {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.65;
+}
+
+/* ── RISK LEVEL TABLE ── */
+.risk-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 13px;
+}
+
+.risk-table th {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.risk-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text2);
+}
+.risk-table tr:last-child td { border-bottom: none; }
+.risk-table td:first-child { font-weight: 600; color: var(--text); font-size: 14px; }
+
+.risk-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.rb-danger { background: var(--red-dim); color: var(--red); }
+.rb-warn { background: var(--amber-dim); color: var(--amber); }
+.rb-safe { background: var(--green-dim); color: var(--green); }
+
+/* ── RESOURCE CARD ── */
+.resource-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.25rem 0;
+}
+
+.resource-item {
+  background: var(--bg2);
+  padding: 1.1rem 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.resource-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.resource-desc {
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.resource-when {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  white-space: nowrap;
+  padding-top: 3px;
+}
+
+/* ── CHECKLIST ── */
+.checklist {
+  list-style: none;
+  margin: 1rem 0;
+}
+
+.checklist li {
+  display: flex;
+  gap: 0.75rem;
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.checklist li:last-child { border-bottom: none; }
+
+.checklist li::before {
+  content: '□';
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text3);
+  font-size: 12px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.checklist li strong { color: var(--text); }
+
+/* ── WARN BANNER ── */
+.warn-banner {
+  background: var(--amber-dim);
+  border: 1px solid #8b6500;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin: 1.5rem 0;
+}
+
+.warn-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.warn-text {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.warn-text strong { color: var(--amber); }
+
+/* ── PROGRESS INDICATOR ── */
+.progress-dots {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.pdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border2);
+}
+
+.pdot.active { background: var(--green); }
+
+.progress-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  margin-left: 0.5rem;
+}
+
+/* ── INLINE CODE ── */
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--green);
+}
+
+/* ── FINAL COMMIT BOX ── */
+.commit-box {
+  background: var(--green-dim);
+  border: 1px solid var(--green-mid);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.commit-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.75rem;
+}
+
+.commit-msg {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.commit-body {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.6;
+}
+
+/* ── FOLDER TREE ── */
+.file-tree {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--text2);
+  margin: 1.25rem 0;
+}
+
+.ft-dir { color: var(--blue); }
+.ft-file { color: var(--text2); }
+.ft-imp { color: var(--green); font-weight: 700; }
+.ft-note { color: var(--text3); font-style: italic; margin-left: 1rem; }
+.ft-warn { color: var(--amber); }
+
+/* ── DIVIDER ── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0 0;
+}
+
+@media (max-width: 640px) {
+  .site-header { padding: 1rem; }
+  .hero { padding: 2rem 1rem 2rem; }
+  .main { padding: 0 1rem 4rem; }
+  .header-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="logo">HealthGrid</span>
+  <span class="header-badge">Day 1 Session</span>
+  <nav class="header-nav">
+    <a href="#s1">The Class</a>
+    <a href="#s2">Build Plan</a>
+    <a href="#s3">Antigravity Prompt</a>
+    <a href="#s4">Code Review</a>
+    <a href="#s5">Don't Vibe Code</a>
+    <a href="#s6">Testing</a>
+    <a href="#s7">Resources</a>
+    <a href="#s8">Reflection</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="hero-label">Apprenticeship · Day 1</div>
+  <h1 class="hero-title">
+    Today you make your<br>
+    <em>first agent speak.</em>
+  </h1>
+  <p class="hero-sub">Three focused hours. One real conversation with Priya the Scrum Master. A deployed backend. A working chat UI. This is the foundation everything else is built on — and it goes into the real product, not the bin.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-val">3h</span>
+      <span class="stat-label">session length</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val">1</span>
+      <span class="stat-label">agent built</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val">2</span>
+      <span class="stat-label">services running</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val">∞</span>
+      <span class="stat-label">leverage gained</span>
+    </div>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ═══════════════════ SECTION 1 ═══════════════════ -->
+<div class="section" id="s1">
+  <div class="section-eyebrow" style="color: var(--green)">
+    <span class="eyebrow-line" style="background: var(--green)"></span>
+    Section 01
+  </div>
+  <h2 class="section-title">Today's Class</h2>
+  <p class="section-subtitle">What you're actually learning, and why it matters more than you think.</p>
+
+  <p class="prose">Today introduces <strong>the client-server model as lived experience</strong>. Not as a diagram. Not as a definition. You will build a request that leaves your browser, travels to a Python process, gets routed to an LLM, streams back token-by-token, and lands in your UI. By the end of today you will have felt this pipeline in your hands. That physical understanding doesn't come from reading.</p>
+
+  <p class="prose" style="margin-top:1rem">The second thing you're learning is <strong>how to define machine identity through language</strong>. The system prompt you write for Priya today is the first real act of AI systems design you'll do. It's small. It's also the exact same skill that makes or breaks multi-agent simulations at scale.</p>
+
+  <hr class="section-rule">
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-tag ctag-green">Objective 1</div>
+      <div class="card-heading">Understand request/response flow</div>
+      <div class="card-body">Next.js sends a message → FastAPI receives it → Anthropic SDK formats it → Claude responds → SSE streams it back. You should be able to trace every step of this in your head by end of day.</div>
+    </div>
+    <div class="card">
+      <div class="card-tag ctag-green">Objective 2</div>
+      <div class="card-heading">Write your first real system prompt</div>
+      <div class="card-body">The Priya persona prompt is not throwaway work. It's the template for all 20+ agents. You are writing the specification for a machine character. Understand why each line exists.</div>
+    </div>
+    <div class="card">
+      <div class="card-tag ctag-green">Objective 3</div>
+      <div class="card-heading">Store conversation history correctly</div>
+      <div class="card-body">Without conversation history, every message is the first. With it, Priya remembers what was said 5 messages ago. You'll implement this in Supabase and understand the shape of the data.</div>
+    </div>
+    <div class="card">
+      <div class="card-tag ctag-green">Objective 4</div>
+      <div class="card-heading">Run two services simultaneously</div>
+      <div class="card-body">Two terminals. One Next.js dev server on port 3000. One FastAPI server on port 8000. Understanding this separation is the foundation of understanding distributed systems.</div>
+    </div>
+  </div>
+
+  <hr class="section-rule">
+
+  <div class="callout callout-amber">
+    <div class="callout-title ct-amber">What NOT to worry about yet</div>
+    <p><strong>Authentication.</strong> Don't touch Supabase auth today. You're using a hardcoded user ID. <strong>Styling.</strong> The UI can be ugly. It just needs to send and receive messages. <strong>Multiple agents.</strong> One agent. One conversation. Depth over breadth. <strong>LangGraph.</strong> Not today. Today is just raw LLM calls. LangGraph comes when you have something to orchestrate.</p>
+  </div>
+
+  <div class="callout callout-red">
+    <div class="callout-title ct-red">Common beginner misconceptions — kill these early</div>
+    <p><strong>"The system prompt tells the AI who it is forever."</strong> No. The system prompt is sent fresh on every single API call. The LLM has zero persistent memory. You are constructing the illusion of memory by including history in each request. This is the most important thing to understand about all LLM applications.</p>
+    <p><strong>"FastAPI and Next.js need to share a codebase."</strong> No. They are completely separate processes that communicate over HTTP. This is exactly the separation that makes your architecture scalable later.</p>
+    <p><strong>"I need to understand everything in the generated code before running it."</strong> No. Run it first. Break it second. Understand it third. In that order.</p>
+  </div>
+
+  <div class="callout callout-green">
+    <div class="callout-title ct-green">The mental model to build today</div>
+    <p>Think of the LLM as a <strong>stateless function</strong>: <code>f(system_prompt + conversation_history + new_message) → response</code>. It always returns the same "type" of output given the same "type" of input. Your entire job as an AI systems engineer is designing what goes into that function and what you do with what comes out. Everything else — memory, orchestration, streaming — is infrastructure around that core idea.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════ SECTION 2 ═══════════════════ -->
+<div class="section" id="s2">
+  <div class="section-eyebrow" style="color: var(--amber)">
+    <span class="eyebrow-line" style="background: var(--amber)"></span>
+    Section 02
+  </div>
+  <h2 class="section-title">Today's Build Plan</h2>
+  <p class="section-subtitle">Three hours, broken into four blocks. Each one builds directly on the last.</p>
+
+  <div class="timeline">
+
+    <!-- Block 1 -->
+    <div class="tl-item tl-green">
+      <div class="tl-time">0:00 – 0:30 · Block 1</div>
+      <div class="tl-heading">Environment Bootstrap + Priya's Persona</div>
+      <div class="tl-body">
+        <p style="margin-bottom:0.75rem">Start here. Before a single line of application code exists, you need to know the LLM works.</p>
+
+        <div class="vibe-grid">
+          <div class="vibe-col">
+            <div class="vibe-col-label vcl-ai">⚡ Let Antigravity generate</div>
+            <ul class="vibe-list">
+              <li>Python virtual environment setup commands</li>
+              <li>requirements.txt with fastapi, uvicorn, anthropic</li>
+              <li>Next.js project scaffold (<code>npx create-next-app</code> flags)</li>
+              <li>Basic folder structure for both projects</li>
+            </ul>
+          </div>
+          <div class="vibe-col">
+            <div class="vibe-col-label vcl-manual">→ You must write manually</div>
+            <ul class="vibe-list">
+              <li>Priya's system prompt — every line, yourself</li>
+              <li>Your <code>.env</code> files (never commit these)</li>
+              <li>The test script that calls Claude directly</li>
+              <li>Reading the Anthropic Messages API docs</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-amber" style="margin-top:1rem">
+          <div class="callout-title ct-amber">Why you write Priya's prompt manually</div>
+          <p>This prompt is your first act of AI character design. If you generate it blindly, you will never understand why it works or doesn't work when Priya starts sounding generic in 3 weeks. Write it yourself. Read the Anthropic prompt engineering docs first (<code>docs.anthropic.com/en/docs/build-with-claude/prompt-engineering</code>). Specifically: system prompt structure, role definition, behavioral constraints. Takes 20 minutes. Pays back for the entire project.</p>
+        </div>
+
+        <p style="margin-top:0.75rem; color: var(--text3); font-size:13px">Before calling Antigravity: write Priya's persona in a notebook or doc first. What does she care about? What annoys her? What are her speech patterns? One paragraph. This forces you to think, not just prompt.</p>
+      </div>
+    </div>
+
+    <!-- Block 2 -->
+    <div class="tl-item tl-amber">
+      <div class="tl-time">0:30 – 1:15 · Block 2</div>
+      <div class="tl-heading">FastAPI Backend — The Chat Endpoint</div>
+      <div class="tl-body">
+        <p style="margin-bottom:0.75rem">One endpoint: <code>POST /chat</code>. Accepts a message and a conversation ID. Returns Priya's response. That's the entire scope of this block.</p>
+
+        <div class="vibe-grid">
+          <div class="vibe-col">
+            <div class="vibe-col-label vcl-ai">⚡ Let Antigravity generate</div>
+            <ul class="vibe-list">
+              <li>FastAPI app boilerplate and CORS config</li>
+              <li>Pydantic request/response models</li>
+              <li>Supabase Python client connection code</li>
+              <li>Basic error handling structure</li>
+            </ul>
+          </div>
+          <div class="vibe-col">
+            <div class="vibe-col-label vcl-manual">→ You must understand deeply</div>
+            <ul class="vibe-list">
+              <li>What <code>async def</code> means and why it matters here</li>
+              <li>How conversation history is shaped (the array format)</li>
+              <li>What CORS is and why you need it</li>
+              <li>How the Anthropic <code>messages</code> parameter works</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="warn-banner" style="margin-top:1rem">
+          <span class="warn-icon">⚠</span>
+          <div class="warn-text"><strong>Async is not optional to understand.</strong> FastAPI is async-first. If you blindly paste async code without understanding what <code>await</code> means, you will get mysterious bugs that take hours to debug. Spend 10 minutes reading: what is an event loop? Why does I/O blocking matter? You don't need to be an expert — you need one clear mental model. Think of <code>await</code> as saying "go do something else while I wait for this network call."</div>
+        </div>
+
+        <p style="margin-top:0.75rem; font-size:14px; color:var(--text2)">After generating, test this endpoint with <strong>curl or the FastAPI interactive docs</strong> (<code>localhost:8000/docs</code>) before touching the frontend. Prove the backend works in isolation. This is how senior engineers work — validate each layer before connecting them.</p>
+      </div>
+    </div>
+
+    <!-- Block 3 -->
+    <div class="tl-item tl-blue">
+      <div class="tl-time">1:15 – 2:00 · Block 3</div>
+      <div class="tl-heading">Supabase — Conversation History Persistence</div>
+      <div class="tl-body">
+        <p style="margin-bottom:0.75rem">Priya currently forgets everything when the server restarts. This block makes her remember — by storing and loading conversation history from Supabase.</p>
+
+        <div class="vibe-grid">
+          <div class="vibe-col">
+            <div class="vibe-col-label vcl-ai">⚡ Let Antigravity generate</div>
+            <ul class="vibe-list">
+              <li>Supabase table creation SQL</li>
+              <li>Python functions to insert/fetch messages</li>
+              <li>The TypeScript Supabase client setup</li>
+            </ul>
+          </div>
+          <div class="vibe-col">
+            <div class="vibe-col-label vcl-manual">→ You must design yourself</div>
+            <ul class="vibe-list">
+              <li>The database schema — what columns? what types?</li>
+              <li>How messages map to the Anthropic API format</li>
+              <li>The fetch → format → inject into prompt sequence</li>
+            </ul>
+          </div>
+        </div>
+
+        <p style="font-size:14px; color:var(--text2); margin-top:1rem">Before writing any code: draw the schema on paper. What does a <code>messages</code> row look like? What identifies a conversation? What order do messages come out in? Answer these questions first. The data model is a decision — it shapes everything that builds on it. This is schema design. It matters.</p>
+
+        <div class="callout callout-blue" style="margin-top:1rem">
+          <div class="callout-title ct-blue">The key insight about conversation history</div>
+          <p>The Anthropic API expects messages in this shape: <code>[{role: "user", content: "..."}, {role: "assistant", content: "..."}, ...]</code>. Your database needs to store exactly this. Your fetch function needs to return exactly this. When you figure out this alignment between your DB schema and the API format, you've understood something foundational about building LLM applications.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Block 4 -->
+    <div class="tl-item tl-purple">
+      <div class="tl-time">2:00 – 3:00 · Block 4</div>
+      <div class="tl-heading">Next.js Chat UI + SSE Streaming</div>
+      <div class="tl-body">
+        <p style="margin-bottom:0.75rem">The frontend. A message input. A message list. Priya's responses stream in token by token. The UI should feel alive — even if it looks like a 1998 webpage.</p>
+
+        <div class="vibe-grid">
+          <div class="vibe-col">
+            <div class="vibe-col-label vcl-ai">⚡ Let Antigravity generate</div>
+            <ul class="vibe-list">
+              <li>The React component structure</li>
+              <li>Tailwind styling (make it functional, not pretty)</li>
+              <li>The SSE/streaming fetch client code</li>
+              <li>The message list rendering logic</li>
+            </ul>
+          </div>
+          <div class="vibe-col">
+            <div class="vibe-col-label vcl-manual">→ You must trace manually</div>
+            <ul class="vibe-list">
+              <li>The React state shape: what state does this component hold?</li>
+              <li>How streaming works: <code>ReadableStream</code> → chunks → appended text</li>
+              <li>What triggers a re-render and when</li>
+              <li>How errors surface to the user</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="warn-banner" style="margin-top:1rem">
+          <span class="warn-icon">⚠</span>
+          <div class="warn-text"><strong>Streaming is the hardest part of today.</strong> Server-Sent Events (SSE) work differently from a normal fetch. The response doesn't arrive all at once — it arrives as a stream of chunks. Generated code here will work but you should read it carefully. If streaming breaks, you need to understand enough to debug it. The key concept: <code>ReadableStream</code>, reading chunks with a <code>reader.read()</code> loop, and decoding bytes to text. Spend 15 minutes understanding just this pattern — you'll use it everywhere in this project.</div>
+        </div>
+
+        <p style="font-size:14px; color:var(--text2); margin-top:1rem">End goal: type a message, press send, watch Priya's response appear word by word. If this is working, <strong>Day 1 is a success.</strong> Don't add more features. Ship the commit. Document what you built.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════ SECTION 3 ═══════════════════ -->
+<div class="section" id="s3">
+  <div class="section-eyebrow" style="color: var(--purple)">
+    <span class="eyebrow-line" style="background: var(--purple)"></span>
+    Section 03
+  </div>
+  <h2 class="section-title">The Antigravity Prompt</h2>
+  <p class="section-subtitle">Paste this verbatim. It's engineered to give you clean, readable, non-overengineered code.</p>
+
+  <div class="warn-banner">
+    <span class="warn-icon">⚠</span>
+    <div class="warn-text"><strong>Before pasting:</strong> Create two empty folders on your machine — <code>healthgrid-backend</code> and <code>healthgrid-frontend</code>. Open both in your Antigravity workspace. Tell it which folder is which. This ensures the generated structure lands in the right place and you know which project is which from day one.</div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">Antigravity Prompt</span>
+      <span class="code-title">Paste this entire block</span>
+    </div>
+    <div class="code-body"><span class="c-comment"># HealthGrid — Day 1 Project Scaffold
+# Goal: Build the minimum working foundation for an AI-powered
+# enterprise simulation platform. One agent. One conversation. Real persistence.
+# This code will NOT be thrown away — it is the foundation of the final product.
+
+# ═══════════════════════════════════════════════════
+# WHAT TO BUILD
+# ═══════════════════════════════════════════════════
+
+</span><span class="c-green">Build two projects:</span>
+
+<span class="c-blue">PROJECT 1: healthgrid-backend</span> (Python + FastAPI)
+<span class="c-blue">PROJECT 2: healthgrid-frontend</span> (Next.js 14 + TypeScript + Tailwind)
+
+<span class="c-comment"># ═══════════════════════════════════════════════════
+# BACKEND SPEC (healthgrid-backend)
+# ═══════════════════════════════════════════════════
+
+</span><span class="c-green">Stack:</span>
+- Python 3.11+
+- FastAPI with uvicorn
+- anthropic Python SDK
+- supabase Python SDK
+- python-dotenv
+
+<span class="c-green">Folder structure:</span>
+healthgrid-backend/
+├── main.py              <span class="c-comment"># FastAPI app entry point</span>
+├── requirements.txt
+├── .env.example         <span class="c-comment"># template for secrets, never real values</span>
+├── agents/
+│   └── priya.py         <span class="c-comment"># Priya's system prompt and agent logic</span>
+├── routes/
+│   └── chat.py          <span class="c-comment"># POST /chat endpoint</span>
+├── db/
+│   └── messages.py      <span class="c-comment"># Supabase insert/fetch functions</span>
+└── models/
+    └── schemas.py       <span class="c-comment"># Pydantic request/response models</span>
+
+<span class="c-green">Backend rules:</span>
+- ONE endpoint today: POST /api/chat
+- Accept: { conversation_id: string, message: string }
+- Fetch conversation history from Supabase
+- Build the messages array for the Anthropic API
+- Stream the response back using Server-Sent Events (SSE)
+- Store new user message AND assistant response in Supabase after completion
+- CORS enabled for localhost:3000
+- Use async/await throughout — explain with comments why it's async
+- NO authentication yet — use a hardcoded user_id "dev-user-001" for now
+
+<span class="c-green">agents/priya.py must contain:</span>
+- PRIYA_SYSTEM_PROMPT as a module-level string constant
+- A build_messages() function that takes history + new message, returns the messages array
+- Detailed comments explaining WHAT each part of the system prompt does and WHY
+
+<span class="c-green">db/messages.py must contain:</span>
+- get_conversation_history(conversation_id) → list of message dicts
+- save_message(conversation_id, role, content) → void
+- Comments explaining the data shape Anthropic expects
+
+<span class="c-green">Supabase table needed (include SQL in a comment at top of db/messages.py):</span>
+CREATE TABLE messages (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  conversation_id text NOT NULL,
+  role text NOT NULL CHECK (role IN ('user', 'assistant')),
+  content text NOT NULL,
+  created_at timestamptz DEFAULT now()
+);
+CREATE INDEX ON messages(conversation_id, created_at);
+
+<span class="c-comment"># ═══════════════════════════════════════════════════
+# FRONTEND SPEC (healthgrid-frontend)
+# ═══════════════════════════════════════════════════
+
+</span><span class="c-green">Stack:</span>
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui (just the basic components needed today)
+
+<span class="c-green">Folder structure:</span>
+healthgrid-frontend/
+├── app/
+│   ├── page.tsx              <span class="c-comment"># redirect to /chat</span>
+│   └── chat/
+│       └── page.tsx          <span class="c-comment"># main chat page</span>
+├── components/
+│   ├── ChatWindow.tsx        <span class="c-comment"># message list display</span>
+│   ├── MessageInput.tsx      <span class="c-comment"># text input + send button</span>
+│   └── MessageBubble.tsx     <span class="c-comment"># single message display</span>
+├── lib/
+│   └── api.ts                <span class="c-comment"># function to call backend /chat with streaming</span>
+└── types/
+    └── chat.ts               <span class="c-comment"># TypeScript types for Message, ConversationState</span>
+
+<span class="c-green">Frontend rules:</span>
+- Use React useState for messages array and loading state
+- Use a hardcoded conversation_id "conv-001" for now (we add auth later)
+- Stream response from backend: show tokens appearing as they arrive
+- Show a "Priya is typing..." indicator while streaming
+- Keep styling minimal but functional — dark theme, monospace font for messages
+- NO complex state management (no Redux, no Zustand yet)
+- Add a comment above EVERY useState and useEffect explaining what it tracks and why
+
+<span class="c-comment"># ═══════════════════════════════════════════════════
+# ABSOLUTE RULES — DO NOT VIOLATE
+# ═══════════════════════════════════════════════════
+
+</span><span class="c-red">DO NOT:</span>
+- Add Docker or docker-compose
+- Add Kubernetes
+- Add CI/CD pipelines
+- Add testing frameworks today
+- Add authentication middleware
+- Add multiple agents (one agent only: Priya)
+- Add rate limiting
+- Add database connection pooling
+- Add caching layers
+- Add any "enterprise patterns" (factories, registries, dependency injection)
+- Use microservices architecture
+- Add websockets (use SSE only)
+- Generate more than what is described above
+
+<span class="c-green">DO:</span>
+- Write comments that explain WHY decisions were made, not just WHAT the code does
+- Use the simplest possible implementation that works
+- Name things clearly and obviously
+- Add a short ARCHITECTURE.md that explains in plain English how the two projects connect
+- Include a README.md per project with exact setup steps
+- Flag any "this should change later" points with a comment: # TODO(v2): ...
+
+<span class="c-green">Comment style for architectural decisions:</span>
+# ARCHITECTURE DECISION: We use SSE instead of WebSockets here because
+# SSE is simpler for one-directional streaming (server → client) and has
+# native browser support without extra libraries. WebSockets make sense
+# when we need bidirectional realtime communication (Phase 3 voice agents).
+
+<span class="c-comment"># Generate this now. Explain any non-obvious choices inline.</span></div>
+  </div>
+
+  <div class="callout callout-green">
+    <div class="callout-title ct-green">After Antigravity generates</div>
+    <p>Do <strong>not</strong> run it immediately. Read Section 4 of this guide first. You're going to do a structured code review before you touch a terminal. This is how engineers actually work with generated code.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════ SECTION 4 ═══════════════════ -->
+<div class="section" id="s4">
+  <div class="section-eyebrow" style="color: var(--blue)">
+    <span class="eyebrow-line" style="background: var(--blue)"></span>
+    Section 04
+  </div>
+  <h2 class="section-title">How to Read the Generated Codebase</h2>
+  <p class="section-subtitle">Senior engineers inspect unfamiliar codebases in a specific order. Learn the method now.</p>
+
+  <div class="callout callout-amber">
+    <div class="callout-title ct-amber">The senior engineer's codebase reading order</div>
+    <p>Start at the <strong>edges</strong> (what enters and exits the system), then move to the <strong>core</strong> (what transforms the data in between). Never start in the middle. Never start by reading every file top to bottom. Map the system first, then read the details.</p>
+  </div>
+
+  <hr class="section-rule">
+
+  <h3 style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text3); margin-bottom:1rem">Read in this exact order</h3>
+
+  <div class="timeline">
+
+    <div class="tl-item tl-green">
+      <div class="tl-time">Step 1 · Read first</div>
+      <div class="tl-heading">ARCHITECTURE.md and both READMEs</div>
+      <div class="tl-body">
+        <p>Before any code. These tell you what the engineer (or AI) thought the system was. Then look at the actual code and see if it matches. Divergences between documentation and code are the most common source of bugs. Ask yourself: does this README match what I asked for?</p>
+      </div>
+    </div>
+
+    <div class="tl-item tl-amber">
+      <div class="tl-time">Step 2 · Read second</div>
+      <div class="tl-heading">models/schemas.py + types/chat.ts</div>
+      <div class="tl-body">
+        <p>The data types. These tell you what the system believes the world looks like. A <code>ChatRequest</code> Pydantic model tells you exactly what the backend expects. The TypeScript types tell you exactly what the frontend sends. If these two align perfectly, the system is coherent. If they drift, you get runtime errors.</p>
+        <p style="margin-top:0.5rem">Ask: what is the shape of a message? What is the shape of a request? Write it down on paper. Don't just read it — draw it.</p>
+      </div>
+    </div>
+
+    <div class="tl-item tl-blue">
+      <div class="tl-time">Step 3 · Read third</div>
+      <div class="tl-heading">agents/priya.py</div>
+      <div class="tl-body">
+        <p>Read the system prompt that was generated for Priya. Does it match your intent? Is it the Priya you imagined? This is where you'll likely need to rewrite. Generated personas are generic. Your Priya has specific personality traits you defined earlier.</p>
+        <p style="margin-top:0.5rem">Look at <code>build_messages()</code>. Trace what happens: history list comes in → new message gets added → full array is returned. Can you follow this in one read? If not, add comments until you can.</p>
+      </div>
+    </div>
+
+    <div class="tl-item tl-purple">
+      <div class="tl-time">Step 4 · Read fourth</div>
+      <div class="tl-heading">routes/chat.py — the endpoint</div>
+      <div class="tl-body">
+        <p>Trace the execution path of one request. Line by line. What happens when a POST hits <code>/api/chat</code>? In your head, follow: request arrives → validated by Pydantic → history fetched from Supabase → messages built → Anthropic call made → response streamed back → messages saved. Can you describe every step? If any step is unclear, that's where a bug will hide.</p>
+      </div>
+    </div>
+
+    <div class="tl-item tl-red">
+      <div class="tl-time">Step 5 · Read fifth</div>
+      <div class="tl-heading">lib/api.ts — the streaming client</div>
+      <div class="tl-body">
+        <p>This is the most complex client code today. Read the streaming fetch function carefully. Look for: how does it start reading the stream? What does it do with each chunk? How does it handle errors? How does it know when the stream is done? If you can answer all four, you understand streaming well enough to debug it.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="section-rule">
+
+  <p class="prose">The folder structure you asked for creates one of the most important engineering habits: <strong>separating concerns</strong>. Here's what each layer is responsible for and why it matters:</p>
+
+  <div class="file-tree">
+healthgrid-backend/
+├── <span class="ft-dir">agents/</span>          <span class="ft-note">WHO the AI is — persona, prompt, message building</span>
+│   └── <span class="ft-imp">priya.py</span>     <span class="ft-note">← Read this first after docs. The "brain" definition.</span>
+├── <span class="ft-dir">routes/</span>          <span class="ft-note">WHAT the API does — HTTP layer only</span>
+│   └── <span class="ft-imp">chat.py</span>      <span class="ft-note">← Trace execution here. Should be thin — just routing.</span>
+├── <span class="ft-dir">db/</span>              <span class="ft-note">WHERE data lives — all Supabase interaction here</span>
+│   └── <span class="ft-imp">messages.py</span>  <span class="ft-note">← If you need to change how data is stored, only touch this.</span>
+├── <span class="ft-dir">models/</span>          <span class="ft-note">SHAPE of data — Pydantic validation models</span>
+│   └── schemas.py   <span class="ft-note">← The contract between frontend and backend.</span>
+└── <span class="ft-warn">main.py</span>          <span class="ft-note">← App entry point. Should be &lt;30 lines. If it's longer, something is wrong.</span>
+
+healthgrid-frontend/
+├── <span class="ft-dir">app/</span>             <span class="ft-note">Next.js App Router pages — routing only</span>
+├── <span class="ft-dir">components/</span>      <span class="ft-note">UI pieces — each file is one component, one responsibility</span>
+├── <span class="ft-imp">lib/api.ts</span>       <span class="ft-note">← All backend communication. If backend URL changes, change only here.</span>
+└── <span class="ft-dir">types/</span>           <span class="ft-note">TypeScript contracts — the shape of data the frontend understands</span>
+  </div>
+
+  <div class="callout callout-red">
+    <div class="callout-title ct-red">Red flags in generated code — look for these</div>
+    <p><strong>main.py is huge.</strong> If <code>main.py</code> has business logic in it, the structure wasn't followed. <strong>API calls in components.</strong> If <code>ChatWindow.tsx</code> calls <code>fetch()</code> directly instead of using <code>lib/api.ts</code>, that's coupling that will hurt later. <strong>Hardcoded strings everywhere.</strong> If the backend URL appears in 3 places in the frontend, configuration isn't centralized. <strong>No comments on async.</strong> If async functions have no explanation, ask Antigravity to annotate them before you proceed.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════ SECTION 5 ═══════════════════ -->
+<div class="section" id="s5">
+  <div class="section-eyebrow" style="color: var(--red)">
+    <span class="eyebrow-line" style="background: var(--red)"></span>
+    Section 05
+  </div>
+  <h2 class="section-title">What You Must Not Vibe Code</h2>
+  <p class="section-subtitle">These are the areas where blind acceptance of AI output will damage you permanently. The cost doesn't show up today — it shows up in week 6 when everything breaks in ways you can't diagnose.</p>
+
+  <table class="risk-table">
+    <tr>
+      <th>Concept</th>
+      <th>Danger Level</th>
+      <th>What You Need to Know</th>
+      <th>How to Learn It</th>
+    </tr>
+    <tr>
+      <td>The Anthropic messages array format</td>
+      <td><span class="risk-badge rb-danger">Critical</span></td>
+      <td>Every LLM call in this project depends on getting this array shape right. Misunderstand it and you'll have broken conversations that look fine until they don't.</td>
+      <td>Read docs.anthropic.com/messages exactly once, carefully. Write 3 example arrays by hand. That's it.</td>
+    </tr>
+    <tr>
+      <td>Database schema design</td>
+      <td><span class="risk-badge rb-danger">Critical</span></td>
+      <td>The <code>messages</code> table schema you define today will store data for the entire simulation. Getting the column types, indexes, and relationships wrong costs you a painful migration later.</td>
+      <td>Draw the schema on paper before generating any SQL. Ask: what queries will I run? What needs an index? Then generate.</td>
+    </tr>
+    <tr>
+      <td>Async / await in Python</td>
+      <td><span class="risk-badge rb-danger">Critical</span></td>
+      <td>FastAPI is async. The Anthropic SDK streaming is async. Supabase calls are async. One blocking call in an async context can freeze your entire server. You need a mental model, not memorized syntax.</td>
+      <td>Read "Python async explained in 5 minutes" (search it). Understand: event loop, coroutine, what <code>await</code> yields to. 15 minutes. Non-negotiable.</td>
+    </tr>
+    <tr>
+      <td>System prompt engineering</td>
+      <td><span class="risk-badge rb-danger">Critical</span></td>
+      <td>Priya's system prompt is the single most important file in the entire project. It defines whether the simulation feels real. Generated prompts are generic. Priya's voice must be yours.</td>
+      <td>Write it yourself. Then test it. Then iterate. This is a skill you're building for the whole project — 20 agents all need this treatment.</td>
+    </tr>
+    <tr>
+      <td>React useState and state shape</td>
+      <td><span class="risk-badge rb-warn">Important</span></td>
+      <td>The chat UI has a messages array as state. If you don't understand when it updates, why re-renders happen, or how the streaming append logic works, you will introduce subtle UI bugs.</td>
+      <td>After code is generated: add console.logs before and after every setState call. Watch the browser console as you type. Understand when state changes.</td>
+    </tr>
+    <tr>
+      <td>Environment variables</td>
+      <td><span class="risk-badge rb-warn">Important</span></td>
+      <td>Your Anthropic API key and Supabase credentials cannot be in the codebase. Not in comments. Not in git history. This is a security fundamental. Generated code sometimes gets this wrong.</td>
+      <td>Manually check: is <code>.env</code> in <code>.gitignore</code>? Is there an <code>.env.example</code> with no real values? Check both projects before your first commit.</td>
+    </tr>
+    <tr>
+      <td>SSE streaming mechanics</td>
+      <td><span class="risk-badge rb-warn">Important</span></td>
+      <td>The streaming response is the most novel UI pattern today. If you paste it without understanding, you won't know how to debug when it hangs, errors silently, or shows garbled text.</td>
+      <td>Read the streaming function line by line. Ask Antigravity to add a comment to every non-obvious line. Then add your own console.log at the chunk-reading stage and watch it fire.</td>
+    </tr>
+    <tr>
+      <td>CORS configuration</td>
+      <td><span class="risk-badge rb-safe">Learn Later</span></td>
+      <td>You need it to work today but don't need to deeply understand it. A wildcard <code>*</code> origin is fine for local development. You'll tighten this in production.</td>
+      <td>Accept the generated config. Just know what it does: it allows the browser to call your backend from a different origin (different port).</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════════════ SECTION 6 ═══════════════════ -->
+<div class="section" id="s6">
+  <div class="section-eyebrow" style="color: var(--cyan)">
+    <span class="eyebrow-line" style="background: var(--cyan)"></span>
+    Section 06
+  </div>
+  <h2 class="section-title">Manual Testing Guide</h2>
+  <p class="section-subtitle">How to validate a system you just built. This is the discipline that separates engineers from script kiddies.</p>
+
+  <div class="callout callout-green">
+    <div class="callout-title ct-green">The testing philosophy for today</div>
+    <p>Test each layer in isolation <strong>before</strong> connecting it to the next layer. Backend works? Then connect frontend. Supabase works? Then use it in the endpoint. The moment you try to test everything together as a first step, you lose the ability to know where an error came from.</p>
+  </div>
+
+  <hr class="section-rule">
+
+  <p style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text3); margin-bottom:1rem">Run these checks in order</p>
+
+  <ul class="checklist">
+    <li>
+      <div>
+        <strong>Supabase table exists.</strong> Go to your Supabase project dashboard → Table Editor. Does the <code>messages</code> table exist with the right columns? Can you manually insert a row? Do this before starting the backend.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Backend starts without errors.</strong> Run <code>uvicorn main:app --reload</code>. Does it start? Any import errors? Any missing environment variables printed in red? Fix these before anything else.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>FastAPI interactive docs work.</strong> Open <code>localhost:8000/docs</code>. Can you see the <code>POST /api/chat</code> endpoint? Can you send a test request from the browser UI and see a response? This proves the backend works without the frontend.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Test the Anthropic connection specifically.</strong> In FastAPI docs, send: <code>{"conversation_id": "test-001", "message": "Hi Priya, what's happening in the sprint today?"}</code>. Does Priya respond as Priya — not as a generic assistant? If she sounds generic, your system prompt isn't being sent.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Check Supabase after a message.</strong> After the API call in the docs, go to Supabase Table Editor. Do you see two new rows — one user message and one assistant message — in the <code>messages</code> table? If only one, your save-after-response logic isn't working.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Test conversation history persistence.</strong> Call the API twice with the same <code>conversation_id</code>. Does the second call's response reflect what was said in the first? If not, your history fetch isn't working or isn't being injected into the prompt.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Frontend renders without console errors.</strong> Run <code>npm run dev</code>. Open browser. Open DevTools (F12) → Console tab. Any red errors before you've done anything? Fix these before testing interactions.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Network tab — watch the request.</strong> DevTools → Network tab → send a message. Click the request to <code>/api/chat</code>. Check: Headers (is content-type correct?), Request body (does it have the right shape?), Response (do you see streaming chunks, or one big blob?). Streaming should show as <code>EventStream</code> or <code>text/event-stream</code>.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Priya's personality test.</strong> Have a 5-message conversation about a fake sprint blocker. Does she stay in character? Does she remember what you said 2 messages ago? Does she sound like an actual Scrum Master, not a chatbot? If not — your system prompt needs work.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Error state test.</strong> Stop the backend. Try sending a message from the frontend. Does the UI handle the error gracefully (error message shown) or does it just hang or crash silently? Error handling is not optional.
+      </div>
+    </li>
+  </ul>
+
+  <hr class="section-rule">
+
+  <div class="callout callout-blue">
+    <div class="callout-title ct-blue">When something breaks — the debugging mindset</div>
+    <p><strong>Step 1: Isolate the layer.</strong> Is the error in the frontend, the network, or the backend? Open Network tab. Is the request being sent? Did it get a response? What was the response status code? <strong>Step 2: Read the actual error message.</strong> Don't Google the error until you've read it twice. Most errors tell you exactly what's wrong. <strong>Step 3: Add a log at the failure point.</strong> Add a <code>print()</code> in Python or <code>console.log()</code> in JavaScript right before where you think it breaks. Verify your assumption about what's happening.</p>
+    <p><strong>The single most useful debugging habit:</strong> When something doesn't work, don't change 3 things at once. Change one thing. Observe. Change one thing. Observe. The urge to "fix everything" at once is how debugging sessions turn into 4-hour nightmares.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════ SECTION 7 ═══════════════════ -->
+<div class="section" id="s7">
+  <div class="section-eyebrow" style="color: var(--amber)">
+    <span class="eyebrow-line" style="background: var(--amber)"></span>
+    Section 07
+  </div>
+  <h2 class="section-title">Curated Resources</h2>
+  <p class="section-subtitle">8 resources. No more. Ordered by when to consume them. Everything on this list is genuinely worth your time.</p>
+
+  <div class="callout callout-amber">
+    <div class="callout-title ct-amber">Resource consumption rule</div>
+    <p>Read documentation <strong>while building</strong>, not before. Open the doc, find the section you need, implement, close the doc. Don't do "study sessions" before touching code. The only exception: the async overview (15 minutes, today, before writing any Python).</p>
+  </div>
+
+  <div class="resource-list">
+
+    <div class="resource-item">
+      <div>
+        <div class="resource-name">Anthropic Messages API Reference</div>
+        <div class="resource-desc"><code>docs.anthropic.com/en/api/messages</code> — The single most important documentation for this entire project. Read the messages array format section. Read the system prompt section. Read streaming. Nothing else today.</div>
+      </div>
+      <div class="resource-when">Read: today, Block 2</div>
+    </div>
+
+    <div class="resource-item">
+      <div>
+        <div class="resource-name">FastAPI Official Tutorial — "First Steps" through "Request Body"</div>
+        <div class="resource-desc"><code>fastapi.tiangolo.com/tutorial</code> — Only the first 6 pages. They cover path operations, request bodies, Pydantic models. Stop at "Query Parameters". The rest is for later.</div>
+      </div>
+      <div class="resource-when">Read: today, Block 2</div>
+    </div>
+
+    <div class="resource-item">
+      <div>
+        <div class="resource-name">Supabase Python Client Docs — "Fetch data" + "Insert data"</div>
+        <div class="resource-desc"><code>supabase.com/docs/reference/python</code> — Just the select and insert sections. You need to know how to query by column value and insert a row. 10 minutes. That's it for today.</div>
+      </div>
+      <div class="resource-when">Read: today, Block 3</div>
+    </div>
+
+    <div class="resource-item">
+      <div>
+        <div class="resource-name">Anthropic Prompt Engineering Overview</div>
+        <div class="resource-desc"><code>docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview</code> — Specifically: system prompts, role definition, behavioral guidelines. Read this before writing Priya's prompt. It will change how you approach all 20+ agents.</div>
+      </div>
+      <div class="resource-when">Read: today, Block 1</div>
+    </div>
+
+    <div class="resource-item">
+      <div>
+        <div class="resource-name">YouTube: Fireship — "Python Async Explained in 6 Minutes"</div>
+        <div class="resource-desc">Search "Python async await explained Fireship" — Fireship's format is extremely dense and accurate. Watch once, don't take notes, just build the mental model. You're not learning to write async code from scratch — you're learning to read it and debug it.</div>
+      </div>
+      <div class="resource-when">Watch: before Block 2</div>
+    </div>
+
+    <div class="resource-item">
+      <div>
+        <div class="resource-name">Next.js App Router Docs — "Server and Client Components"</div>
+        <div class="resource-desc"><code>nextjs.org/docs/app/building-your-application/rendering</code> — Your chat UI is a client component (it uses state). Know what this means and why. The concept of "use client" vs server components is something you'll encounter every day in this project. Read once, understand the distinction.</div>
+      </div>
+      <div class="resource-when">Read: today, Block 4</div>
+    </div>
+
+    <div class="resource-item">
+      <div>
+        <div class="resource-name">YouTube: Theo (t3.gg) — "Server Components are amazing"</div>
+        <div class="resource-desc">Search "Theo t3gg server components" — Theo is opinionated but technically excellent. His Next.js content is grounded in real production experience. Watch after Day 1 to understand why the App Router architecture matters. Don't watch this today — it's a "Week 1 evening" resource.</div>
+      </div>
+      <div class="resource-when">Watch: this week</div>
+    </div>
+
+    <div class="resource-item">
+      <div>
+        <div class="resource-name">LangGraph "Introduction" Docs</div>
+        <div class="resource-desc"><code>langchain-ai.github.io/langgraph</code> — Just the introduction and the first "quick start" example. Don't implement anything yet. Read to understand what problem LangGraph solves: stateful, multi-step agent workflows. You'll use this in Week 3. Understanding it conceptually now means Week 3 isn't starting from zero.</div>
+      </div>
+      <div class="resource-when">Read: end of Week 1</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════ SECTION 8 ═══════════════════ -->
+<div class="section" id="s8">
+  <div class="section-eyebrow" style="color: var(--green)">
+    <span class="eyebrow-line" style="background: var(--green)"></span>
+    Section 08
+  </div>
+  <h2 class="section-title">End-of-Day Reflection</h2>
+  <p class="section-subtitle">The difference between a developer who grows fast and one who doesn't is this: documentation of what was built, what was learned, and what broke.</p>
+
+  <div class="callout callout-green">
+    <div class="callout-title ct-green">The success condition for today</div>
+    <p>You type a message to Priya. She responds in character. You send another message that references the first. She acknowledges it — because the history was fetched from Supabase. The response streams in token by token. <strong>If this is happening, Day 1 is a complete success.</strong> Nothing else matters today.</p>
+  </div>
+
+  <hr class="section-rule">
+
+  <p class="prose">Before you close your laptop, spend exactly 15 minutes writing the following. Not for anyone else — for your future self reading this in Week 6 when you've forgotten what Day 1 felt like.</p>
+
+  <ul class="checklist">
+    <li>
+      <strong>Commit your code.</strong> Message: <code>feat: day 1 — priya agent with supabase persistence and streaming chat UI</code>. Even if it's imperfect. Especially if it's imperfect. The git history of a learning project is one of its most valuable artifacts.
+    </li>
+    <li>
+      <strong>Screenshot or record a Loom of Priya responding.</strong> 30 seconds. Show the streaming. Show the conversation history working (two messages that reference each other). This becomes your first portfolio artifact.
+    </li>
+    <li>
+      <strong>Write one paragraph: "What I actually understand now that I didn't this morning."</strong> Be specific. Not "I learned about async." Write: "I now understand that every Anthropic API call reconstructs the entire conversation from scratch — there is no server-side memory. The illusion of memory is created by appending prior messages to each new request."
+    </li>
+    <li>
+      <strong>Write one paragraph: "What broke and how I fixed it."</strong> The most important engineering learning always comes from things that failed. Even if the fix was trivial, write it down. You will hit the same class of bug again.
+    </li>
+    <li>
+      <strong>Write one paragraph: "What I don't yet understand."</strong> This is not a failure list — it's a learning roadmap. What was murky? What did you accept without fully understanding? These become your reading targets for the rest of Week 1.
+    </li>
+    <li>
+      <strong>Push to GitHub.</strong> Public repo. This is your portfolio building from commit 1. Write a one-sentence description in the repo: "An AI-powered enterprise SAFe simulation. Currently: building the agent layer."
+    </li>
+  </ul>
+
+  <hr class="section-rule">
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-tag ctag-green">Signs you're progressing well</div>
+      <div class="card-body">You broke something, debugged it yourself (not immediately Googled), and found the cause. Priya sounds different from a generic assistant. You can explain to someone else what a system prompt does. You used <code>localhost:8000/docs</code> before touching the frontend.</div>
+    </div>
+    <div class="card">
+      <div class="card-tag ctag-amber">Normal confusion today</div>
+      <div class="card-body">Why does async exist at all? What is Pydantic actually doing? Why do we need SSE and not just regular fetch? When does Supabase Realtime become necessary? These are good questions. They mean you're paying attention. They're Week 2 and 3 answers.</div>
+    </div>
+    <div class="card">
+      <div class="card-tag ctag-red">Warning signs</div>
+      <div class="card-body">You spent more than 45 minutes on something without asking for help or pivoting. You added features that weren't in today's plan. You got to the end of 3 hours and nothing runs. If any of these: cut scope, ask for help, ship a smaller version.</div>
+    </div>
+  </div>
+
+  <div class="commit-box">
+    <div class="commit-title">Your target git commit</div>
+    <div class="commit-msg">feat: day 1 — working agent pipeline with persistence</div>
+    <div class="commit-body">
+- Add Priya Sharma agent with system prompt and persona<br>
+- Add POST /api/chat endpoint with SSE streaming<br>
+- Add Supabase messages table and history persistence<br>
+- Add Next.js chat UI with streaming response display<br>
+- Conversation history persists across page refreshes<br>
+<br>
+Architecture: Next.js (3000) → FastAPI (8000) → Anthropic API<br>
+Persistence: Supabase messages table (conversation_id, role, content)<br>
+<br>
+TODO(v2): Add auth, multiple agents, sprint board
+    </div>
+  </div>
+
+  <div class="callout callout-green">
+    <div class="callout-title ct-green">Tomorrow</div>
+    <p>Day 2 adds <strong>three more agents</strong> (Alex the PM, Ravi the Tech Lead, Marcus the QA Lead) and the <strong>standup runner</strong> — the function that fires all agents in sequence and posts their updates to a shared channel. By end of Day 2, you'll have a team that talks to each other. The simulation will start to breathe.</p>
+  </div>
+
+</div>
+
+</main>
+</body>
+</html>

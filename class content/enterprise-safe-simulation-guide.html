@@ -1,0 +1,2441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise SAFe Simulation Platform — Complete Build Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --ink2: #3a3832;
+    --ink3: #6b6760;
+    --paper: #f5f3ee;
+    --paper2: #ede9e1;
+    --paper3: #e2ddd4;
+    --accent: #c84b1a;
+    --accent2: #1a6b8a;
+    --accent3: #2d7a3a;
+    --accent4: #7a2d8a;
+    --gold: #b8861a;
+    --border: #ccc8be;
+    --code-bg: #1a1917;
+    --code-fg: #e8e4da;
+    --tag-safe: #c84b1a;
+    --tag-ai: #1a6b8a;
+    --tag-stack: #2d7a3a;
+    --tag-career: #7a2d8a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh;
+    background: var(--ink);
+    color: var(--paper);
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,0.03) 79px, rgba(255,255,255,0.03) 80px),
+      repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.03) 79px, rgba(255,255,255,0.03) 80px);
+    pointer-events: none;
+  }
+
+  .cover-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 3rem;
+    border-left: 2px solid var(--accent);
+    padding-left: 1rem;
+  }
+
+  .cover-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    max-width: 900px;
+    margin-bottom: 2rem;
+  }
+
+  .cover-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .cover-sub {
+    font-size: 1.15rem;
+    color: rgba(245,243,238,0.6);
+    max-width: 680px;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+  }
+
+  .cover-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 4rem;
+  }
+
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+  .pill-red { border-color: var(--accent); color: var(--accent); }
+  .pill-blue { border-color: #4a9dba; color: #4a9dba; }
+  .pill-green { border-color: #5aaa68; color: #5aaa68; }
+  .pill-purple { border-color: #b46ac4; color: #b46ac4; }
+  .pill-gold { border-color: #d4a332; color: #d4a332; }
+
+  .cover-toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.8rem;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 2rem;
+  }
+
+  .toc-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    cursor: pointer;
+    padding: 0.6rem;
+    border-radius: 6px;
+    transition: background 0.15s;
+    text-decoration: none;
+    color: inherit;
+  }
+  .toc-item:hover { background: rgba(255,255,255,0.06); }
+
+  .toc-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    padding-top: 3px;
+    min-width: 20px;
+  }
+
+  .toc-text {
+    font-size: 13px;
+    color: rgba(245,243,238,0.75);
+    line-height: 1.4;
+  }
+
+  /* ── LAYOUT ── */
+  .doc {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section {
+    margin-top: 6rem;
+    scroll-margin-top: 2rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink3);
+    padding-top: 8px;
+    min-width: 32px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    line-height: 1.15;
+  }
+
+  .section-tag {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    align-self: flex-start;
+    margin-top: 6px;
+  }
+  .tag-safe { background: rgba(200,75,26,0.12); color: var(--tag-safe); }
+  .tag-ai { background: rgba(26,107,138,0.12); color: var(--tag-ai); }
+  .tag-stack { background: rgba(45,122,58,0.12); color: var(--tag-stack); }
+  .tag-career { background: rgba(122,45,138,0.12); color: var(--tag-career); }
+  .tag-gold { background: rgba(184,134,26,0.12); color: var(--gold); }
+
+  /* ── PROSE ── */
+  .prose { max-width: 780px; }
+
+  .prose p {
+    margin-bottom: 1.25rem;
+    color: var(--ink2);
+    font-weight: 400;
+  }
+
+  .prose strong { color: var(--ink); font-weight: 600; }
+
+  .lead {
+    font-size: 1.2rem;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 780px;
+  }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-left: 3px solid;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .callout-red { border-color: var(--accent); background: rgba(200,75,26,0.06); }
+  .callout-blue { border-color: var(--accent2); background: rgba(26,107,138,0.06); }
+  .callout-green { border-color: var(--accent3); background: rgba(45,122,58,0.06); }
+  .callout-gold { border-color: var(--gold); background: rgba(184,134,26,0.06); }
+
+  .callout-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  .cl-red { color: var(--accent); }
+  .cl-blue { color: var(--accent2); }
+  .cl-green { color: var(--accent3); }
+  .cl-gold { color: var(--gold); }
+
+  .callout p { margin-bottom: 0; color: var(--ink); font-size: 15px; }
+  .callout p + p { margin-top: 0.75rem; }
+
+  /* ── SUBSECTION HEADERS ── */
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    margin: 2.5rem 0 1rem;
+    color: var(--ink);
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 2rem 0 0.75rem;
+    color: var(--ink);
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: var(--ink);
+  }
+
+  /* ── CARDS & GRIDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .card-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .card-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .card-accent-red { border-top: 3px solid var(--accent); }
+  .card-accent-blue { border-top: 3px solid var(--accent2); }
+  .card-accent-green { border-top: 3px solid var(--accent3); }
+  .card-accent-purple { border-top: 3px solid var(--accent4); }
+  .card-accent-gold { border-top: 3px solid var(--gold); }
+
+  .card-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 0.5rem;
+  }
+
+  .card h4 {
+    margin: 0 0 0.75rem;
+    border: none;
+    font-size: 1rem;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--ink2);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  .card ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.2rem;
+    font-size: 14px;
+    color: var(--ink2);
+  }
+
+  .card ul li { margin-bottom: 0.3rem; }
+
+  /* ── SYSTEM ARCHITECTURE TABLE ── */
+  .arch-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 14px;
+  }
+
+  .arch-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+
+  .arch-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--ink2);
+  }
+
+  .arch-table tr:last-child td { border-bottom: none; }
+  .arch-table tr:hover td { background: var(--paper2); }
+
+  .arch-table td:first-child {
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px;
+  }
+  .badge-red { background: rgba(200,75,26,0.12); color: var(--accent); }
+  .badge-blue { background: rgba(26,107,138,0.12); color: var(--accent2); }
+  .badge-green { background: rgba(45,122,58,0.12); color: var(--accent3); }
+  .badge-purple { background: rgba(122,45,138,0.12); color: var(--accent4); }
+  .badge-gold { background: rgba(184,134,26,0.12); color: var(--gold); }
+  .badge-gray { background: var(--paper3); color: var(--ink3); }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+
+  .code-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 0.5rem;
+  }
+
+  .code-comment { color: #6a9955; }
+  .code-key { color: #9cdcfe; }
+  .code-str { color: #ce9178; }
+  .code-num { color: #b5cea8; }
+  .code-kw { color: #c586c0; }
+  .code-fn { color: #dcdcaa; }
+
+  /* ── PHASE ROADMAP ── */
+  .phase-block {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .phase-header:hover { background: var(--paper2); }
+
+  .phase-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .phase-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    flex: 1;
+  }
+
+  .phase-duration {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+    white-space: nowrap;
+  }
+
+  .phase-chevron {
+    font-size: 18px;
+    color: var(--ink3);
+    transition: transform 0.2s;
+  }
+  .phase-header.open .phase-chevron { transform: rotate(180deg); }
+
+  .phase-body {
+    display: none;
+    padding: 0 1.5rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .phase-body.open { display: block; }
+
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .phase-col-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 0.4rem;
+  }
+
+  .phase-list {
+    list-style: none;
+    font-size: 13px;
+    color: var(--ink2);
+  }
+
+  .phase-list li {
+    padding: 3px 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .phase-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--ink3);
+    font-size: 11px;
+  }
+
+  /* ── WEEK PLAN ── */
+  .week-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1.5rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .week-row:last-child { border-bottom: none; }
+
+  .week-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink3);
+    padding-top: 2px;
+  }
+
+  .week-tasks { }
+
+  .week-title {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    font-size: 15px;
+  }
+
+  .week-items {
+    list-style: none;
+    font-size: 13px;
+    color: var(--ink2);
+  }
+
+  .week-items li {
+    padding: 2px 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .week-items li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--ink3);
+  }
+
+  .week-milestone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: rgba(200,75,26,0.08);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-top: 0.6rem;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 1.5rem 0;
+  }
+
+  .compare-table th {
+    padding: 10px 12px;
+    text-align: left;
+    background: var(--paper2);
+    font-weight: 600;
+    font-size: 13px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .compare-table th:first-child {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+
+  .compare-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--ink2);
+  }
+
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  .compare-table td:first-child {
+    font-weight: 600;
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .rec-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    background: var(--accent);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* ── RISK TABLE ── */
+  .risk-item {
+    display: grid;
+    grid-template-columns: 1fr 60px 60px;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .risk-item:first-child { border-radius: 8px 8px 0 0; background: var(--ink); color: white; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.05em; }
+  .risk-item:last-child { border-bottom: none; }
+
+  .risk-name { font-weight: 600; font-size: 14px; }
+  .risk-desc { font-size: 13px; color: var(--ink3); margin-top: 2px; }
+
+  .risk-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .risk-high { background: rgba(200,75,26,0.15); color: var(--accent); }
+  .risk-med { background: rgba(184,134,26,0.15); color: var(--gold); }
+  .risk-low { background: rgba(45,122,58,0.15); color: var(--accent3); }
+
+  /* ── STACK RECOMMENDATION ── */
+  .stack-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .stack-item:last-child { border-bottom: none; }
+
+  .stack-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .stack-name { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+  .stack-tool { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--accent); margin-bottom: 4px; }
+  .stack-why { font-size: 13px; color: var(--ink2); }
+
+  /* ── AGENT CARD ── */
+  .agent-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .agent-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--paper2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .agent-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .agent-name { font-weight: 700; font-size: 15px; }
+  .agent-role { font-size: 12px; color: var(--ink3); }
+
+  .agent-body { padding: 1rem 1.25rem; }
+  .agent-body p { font-size: 13px; color: var(--ink2); margin-bottom: 0.5rem; }
+  .agent-body strong { color: var(--ink); }
+
+  .agent-mem {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  /* ── MVP SCOPE ── */
+  .mvp-tier {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+
+  .mvp-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .mvp-v-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 6px;
+    color: white;
+    min-width: 48px;
+    text-align: center;
+  }
+
+  .mvp-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+  }
+
+  .mvp-timeline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+    margin-left: auto;
+  }
+
+  .mvp-body {
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  .mvp-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .mvp-feat {
+    font-size: 13px;
+    color: var(--ink2);
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mvp-feat-incl::before { content: '✓'; color: var(--accent3); font-size: 12px; }
+  .mvp-feat-cut::before { content: '–'; color: var(--ink3); font-size: 12px; }
+  .mvp-feat-fake::before { content: '~'; color: var(--gold); font-size: 12px; }
+
+  /* ── FINAL RECOMMENDATION ── */
+  .final-box {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin: 2rem 0;
+  }
+
+  .final-box h3 {
+    color: var(--paper);
+    border-color: rgba(255,255,255,0.15);
+    font-size: 0.85rem;
+  }
+
+  .final-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+
+  .final-item-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,243,238,0.45);
+    margin-bottom: 0.3rem;
+  }
+
+  .final-item-val {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--paper);
+  }
+
+  .final-item-sub {
+    font-size: 12px;
+    color: rgba(245,243,238,0.55);
+    margin-top: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── PHILOSOPHY BOX ── */
+  .philosophy {
+    background: linear-gradient(135deg, var(--ink) 0%, #1a1713 100%);
+    color: var(--paper);
+    border-radius: 16px;
+    padding: 3rem;
+    margin: 3rem 0;
+    text-align: center;
+  }
+
+  .philosophy-quote {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-style: italic;
+    line-height: 1.4;
+    max-width: 700px;
+    margin: 0 auto 1rem;
+  }
+
+  .philosophy-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: rgba(245,243,238,0.45);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+
+  /* ── NAV BAR ── */
+  .nav {
+    position: sticky;
+    top: 0;
+    background: rgba(245,243,238,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 100;
+    overflow-x: auto;
+    font-size: 13px;
+  }
+
+  .nav-logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    margin-right: 0.5rem;
+  }
+
+  .nav a {
+    font-size: 12px;
+    color: var(--ink3);
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+
+  .nav a:hover { color: var(--ink); background: var(--paper2); }
+
+  /* Print / utility */
+  .no-break { page-break-inside: avoid; }
+
+  @media (max-width: 640px) {
+    .cover { padding: 2rem 1.5rem; }
+    .doc { padding: 0 1rem 4rem; }
+    .week-row { grid-template-columns: 1fr; }
+    .week-label { padding-bottom: 0; }
+    .risk-item { grid-template-columns: 1fr auto auto; }
+    .nav { gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover" id="top">
+  <div>
+    <div class="cover-tag">// Enterprise SAFe Simulation Platform — Complete Build Guide</div>
+    <h1 class="cover-title">
+      Build <em>HealthGrid</em>:<br>
+      An AI-Powered<br>
+      Enterprise Simulator
+    </h1>
+    <p class="cover-sub">
+      A solo developer's complete blueprint for building an enterprise SAFe simulation platform — using a fictional healthcare software company, multi-agent AI systems, and modern tooling. From beginner to shipped product.
+    </p>
+    <div class="cover-pills">
+      <span class="pill pill-red">SAFe / Agile</span>
+      <span class="pill pill-blue">Multi-Agent AI</span>
+      <span class="pill pill-green">ASP.NET Core + Next.js</span>
+      <span class="pill pill-purple">LangGraph</span>
+      <span class="pill pill-gold">Portfolio Project</span>
+    </div>
+    <div class="cover-toc">
+      <a href="#s1" class="toc-item"><span class="toc-num">01</span><span class="toc-text">Product System Breakdown</span></a>
+      <a href="#s2" class="toc-item"><span class="toc-num">02</span><span class="toc-text">How SAFe Gets Simulated</span></a>
+      <a href="#s3" class="toc-item"><span class="toc-num">03</span><span class="toc-text">Agentic System Design</span></a>
+      <a href="#s4" class="toc-item"><span class="toc-num">04</span><span class="toc-text">Modern Tech Stack</span></a>
+      <a href="#s5" class="toc-item"><span class="toc-num">05</span><span class="toc-text">Learning Roadmap</span></a>
+      <a href="#s6" class="toc-item"><span class="toc-num">06</span><span class="toc-text">MVP Strategy</span></a>
+      <a href="#s7" class="toc-item"><span class="toc-num">07</span><span class="toc-text">Execution Plan</span></a>
+      <a href="#s8" class="toc-item"><span class="toc-num">08</span><span class="toc-text">Portfolio Positioning</span></a>
+      <a href="#s9" class="toc-item"><span class="toc-num">09</span><span class="toc-text">Risks & Reality Check</span></a>
+      <a href="#s10" class="toc-item"><span class="toc-num">10</span><span class="toc-text">Final Recommendation</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<nav class="nav">
+  <span class="nav-logo">HealthGrid</span>
+  <a href="#s1">Product</a>
+  <a href="#s2">SAFe</a>
+  <a href="#s3">Agents</a>
+  <a href="#s4">Stack</a>
+  <a href="#s5">Roadmap</a>
+  <a href="#s6">MVP</a>
+  <a href="#s7">Execution</a>
+  <a href="#s8">Career</a>
+  <a href="#s9">Risks</a>
+  <a href="#s10">Final</a>
+</nav>
+
+<!-- PHILOSOPHY -->
+<div class="doc">
+<div class="philosophy">
+  <p class="philosophy-quote">"Enterprise software engineering is more about coordination, communication, and systems understanding than writing isolated code."</p>
+  <p class="philosophy-sub">// The core insight this platform must teach</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 1 — PRODUCT BREAKDOWN
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h1 class="section-title">Product System Breakdown</h1>
+    <span class="section-tag tag-safe">Architecture</span>
+  </div>
+
+  <p class="lead">HealthGrid is a browser-based enterprise simulation platform. The user plays a software developer who has just joined <strong>MedCore Systems</strong> — a fictional company that builds and maintains a Hospital Management Information System (HMIS). The company already exists. The teams are already operating. The backlog already has history.</p>
+
+  <div class="callout callout-red">
+    <div class="callout-label cl-red">Critical design principle</div>
+    <p>The user is <strong>joining</strong> an ongoing enterprise, not founding one. This is what makes it realistic. Architecture exists. Tech debt exists. Priorities already have political weight. The simulation should enforce this feeling from the first login.</p>
+  </div>
+
+  <h2>Core Systems Map</h2>
+  <p class="prose"><p>The platform has six major system layers that interact to produce the simulation experience. Understanding how they connect is critical before building any single piece.</p></p>
+
+  <div class="card-grid">
+    <div class="card card-accent-red">
+      <div class="card-label">Layer 1</div>
+      <h4>Simulation Engine</h4>
+      <p>The central time controller. Manages the PI clock (simulated days/sprints), triggers ceremony events, generates blockers, injects changing requirements, and orchestrates the overall narrative arc of the experience.</p>
+    </div>
+    <div class="card card-accent-blue">
+      <div class="card-label">Layer 2</div>
+      <h4>Agent Ensemble</h4>
+      <p>20–30 AI personas operating as your coworkers. Scrum Master, Product Manager, Architect, QA Lead, Team Leads from dependency teams. Each has persistent memory, personality, and realistic agenda-driven behavior.</p>
+    </div>
+    <div class="card card-accent-green">
+      <div class="card-label">Layer 3</div>
+      <h4>Enterprise Context Store</h4>
+      <p>The persistent "world state" — all architectural docs, ADRs, sprint history, team OKRs, backlog items, dependencies. Agents and the simulation engine query this to stay grounded and consistent.</p>
+    </div>
+    <div class="card card-accent-purple">
+      <div class="card-label">Layer 4</div>
+      <h4>Communication Layer</h4>
+      <p>The Slack-like interface, ticket system (Jira-like), PR review flows, and meeting transcripts. This is where most of the user's experience lives — reading, writing, responding.</p>
+    </div>
+    <div class="card card-accent-gold">
+      <div class="card-label">Layer 5</div>
+      <h4>Evaluation Engine</h4>
+      <p>Tracks user behavior across the simulation. Did they ask the right questions? Communicate blockers early? Demonstrate ownership? Score against rubrics that match real enterprise interview criteria.</p>
+    </div>
+    <div class="card card-accent-red">
+      <div class="card-label">Layer 6</div>
+      <h4>Codebase Context Layer</h4>
+      <p>Simulated repository structure. Not a working compiler — rather, believable file trees, partial implementations, README stubs, and API contracts that agents can reference and discuss.</p>
+    </div>
+  </div>
+
+  <h2>The MedCore HMIS Domain</h2>
+  <p class="prose"><p>The fictional company's product domain creates natural cross-team dependencies. Each service boundary maps to a team.</p></p>
+
+  <table class="arch-table">
+    <tr>
+      <th>Service</th>
+      <th>Team</th>
+      <th>Stack</th>
+      <th>Key Dependencies</th>
+    </tr>
+    <tr>
+      <td>Patient Service</td>
+      <td>Patient Management Team</td>
+      <td><span class="badge badge-blue">ASP.NET Core</span> <span class="badge badge-gray">MSSQL</span></td>
+      <td>Auth Service, Billing, Lab</td>
+    </tr>
+    <tr>
+      <td>Billing Service</td>
+      <td>Billing Team</td>
+      <td><span class="badge badge-blue">ASP.NET Core</span> <span class="badge badge-gray">MSSQL</span></td>
+      <td>Patient Service, Insurance APIs</td>
+    </tr>
+    <tr>
+      <td>Pharmacy Service</td>
+      <td>Pharmacy Team</td>
+      <td><span class="badge badge-blue">ASP.NET Core</span> <span class="badge badge-gray">MSSQL</span></td>
+      <td>Patient Service, Billing Service</td>
+    </tr>
+    <tr>
+      <td>Laboratory Service</td>
+      <td>Lab Team</td>
+      <td><span class="badge badge-blue">ASP.NET Core</span> <span class="badge badge-gray">MSSQL</span></td>
+      <td>Patient Service, Notification Service</td>
+    </tr>
+    <tr>
+      <td>Auth / Identity Service</td>
+      <td>Platform Team</td>
+      <td><span class="badge badge-blue">ASP.NET Core</span> <span class="badge badge-purple">JWT/OIDC</span></td>
+      <td>Every other service (transitive)</td>
+    </tr>
+    <tr>
+      <td>Reporting Service</td>
+      <td>Analytics Team</td>
+      <td><span class="badge badge-green">Next.js</span> <span class="badge badge-gray">MSSQL</span></td>
+      <td>All domain services (read events)</td>
+    </tr>
+    <tr>
+      <td>Appointment Service</td>
+      <td>Patient Management</td>
+      <td><span class="badge badge-blue">ASP.NET Core</span></td>
+      <td>Patient, Doctor workflows, Notifications</td>
+    </tr>
+    <tr>
+      <td>Notification Service</td>
+      <td>Platform Team</td>
+      <td><span class="badge badge-blue">ASP.NET Core</span> <span class="badge badge-gold">SignalR</span></td>
+      <td>Consumed by all domain services</td>
+    </tr>
+    <tr>
+      <td>HMIS Portal (Frontend)</td>
+      <td>Frontend Team</td>
+      <td><span class="badge badge-green">Next.js</span> <span class="badge badge-green">TypeScript</span></td>
+      <td>All backend services via REST/gRPC</td>
+    </tr>
+  </table>
+
+  <h2>How All Systems Interact</h2>
+
+  <div class="code-block">
+<span class="code-comment">// Interaction flow — what happens during a sprint simulation</span>
+
+<span class="code-key">Simulation Engine</span>: advances time → emits event "Sprint 3 Day 2"
+    ↓
+<span class="code-key">Agent Orchestrator</span>: receives event → selects relevant agents to activate
+    ↓
+<span class="code-key">PM Agent</span>: queries Context Store → finds "Billing API contract still undefined"
+<span class="code-key">PM Agent</span>: posts Slack message → "@{user} we need the billing endpoint ready by EOD"
+    ↓
+<span class="code-key">User</span>: sees message in Communication Layer → responds → updates ticket
+    ↓
+<span class="code-key">Scrum Master Agent</span>: detects ticket status change → updates sprint board
+    ↓
+<span class="code-key">Evaluation Engine</span>: logs "user responded to dependency request within 2h" → +ownership score
+    ↓
+<span class="code-key">Blocker Injector</span>: fires "Auth team has deployment freeze until Monday"
+<span class="code-key">Tech Lead Agent</span>: posts in team channel → "We're blocked, need to plan workaround"
+    ↓
+<span class="code-key">User</span>: must decide → surface blocker in standup? escalate? find workaround?
+    ↓
+<span class="code-key">Evaluation Engine</span>: scores communication quality + escalation appropriateness
+  </div>
+
+  <div class="callout callout-blue">
+    <div class="callout-label cl-blue">Codebase realism strategy</div>
+    <p>Do NOT build actual working microservices. Instead, generate a <strong>believable skeleton</strong>: directory trees, interface files (.cs), README stubs, broken/partial implementations, and API contracts. Agents hold this context in their memory store and reference it naturally in conversation ("The IPatientRepository interface is in the Core layer, but the implementation has a TODO on the search method").</p>
+    <p>The goal is that codebase discussions feel real, not that the code compiles.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 2 — SAFE SIMULATION
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h1 class="section-title">How SAFe Gets Simulated</h1>
+    <span class="section-tag tag-safe">SAFe Framework</span>
+  </div>
+
+  <p class="lead">A real SAFe Program Increment is 8–12 weeks, containing 4–5 two-week sprints plus an Innovation & Planning (IP) sprint. For a simulation, you compress this to a <strong>4-week compressed PI</strong> with 2 sprints of ~2 days of real-time each.</p>
+
+  <h2>The Simulated PI Timeline</h2>
+
+  <div class="card card-accent-red" style="margin-bottom:1.5rem">
+    <div class="card-label">Time compression model</div>
+    <h4>1 real-world hour = 1 simulated workday</h4>
+    <p>A full PI experience takes about 8–10 hours of user engagement spread over days or weeks. The simulation progresses asynchronously — events and messages accumulate whether or not the user is active, creating a realistic "you came back Monday morning and have 12 Slack messages" experience.</p>
+  </div>
+
+  <table class="arch-table">
+    <tr>
+      <th>Simulated Event</th>
+      <th>What Happens</th>
+      <th>How AI Generates It</th>
+      <th>User Role</th>
+    </tr>
+    <tr>
+      <td>PI Planning (Day 0)</td>
+      <td>2-day planning event. Teams present features, identify dependencies, commit to objectives.</td>
+      <td>PM Agent presents feature set. Architect Agent explains constraints. Other team leads surface their plans and conflicts.</td>
+      <td>Fill out team PI objectives. Identify your sprint commitments. Ask questions in breakout.</td>
+    </tr>
+    <tr>
+      <td>Sprint 1 Planning</td>
+      <td>Team selects stories from backlog for sprint. Estimates. Assigns.</td>
+      <td>Scrum Master Agent facilitates. PM Agent clarifies requirements. Backend Agent volunteers for stories.</td>
+      <td>Claim stories. Estimate. Flag concerns about dependencies.</td>
+    </tr>
+    <tr>
+      <td>Daily Standup</td>
+      <td>3-question check-in. Blockers surface here.</td>
+      <td>Each agent posts their standup update. Blockers are injected at ~30% frequency.</td>
+      <td>Write your standup. React to others' blockers. Offer or request help.</td>
+    </tr>
+    <tr>
+      <td>Backlog Refinement</td>
+      <td>Grooming upcoming stories. Defining ACs, estimates.</td>
+      <td>PM Agent presents stories. BA Agent asks clarification questions. Tech Lead Agent adds technical constraints.</td>
+      <td>Ask clarifying questions. Point out technical considerations. Suggest story splits.</td>
+    </tr>
+    <tr>
+      <td>Scrum of Scrums</td>
+      <td>Cross-team sync. Team representatives surface inter-team issues.</td>
+      <td>Each team's "representative agent" attends. Auth Team blocker becomes visible here.</td>
+      <td>Represent your team's status. Flag your dependencies on other teams.</td>
+    </tr>
+    <tr>
+      <td>Sprint Review</td>
+      <td>Demo completed work to stakeholders. Incomplete work is discussed.</td>
+      <td>Stakeholder Agents ask questions. PM Agent tallies velocity. Incomplete stories get scored.</td>
+      <td>Demo your completed work. Explain any incomplete stories honestly.</td>
+    </tr>
+    <tr>
+      <td>Retrospective</td>
+      <td>Team reflects on process. What went well? What to improve?</td>
+      <td>Scrum Master Agent facilitates. Agents share candid feedback that reflects the events of the sprint.</td>
+      <td>Give genuine process feedback. Recognize teammates. Identify personal improvement areas.</td>
+    </tr>
+    <tr>
+      <td>PI System Demo</td>
+      <td>End of PI. All teams demo integrated features to leadership.</td>
+      <td>CTO Agent and VP Product Agent attend. Ask about dependencies between team deliverables.</td>
+      <td>Articulate what the team delivered vs. committed. Explain variance.</td>
+    </tr>
+    <tr>
+      <td>Inspect & Adapt</td>
+      <td>PI retrospective + problem-solving workshop.</td>
+      <td>Leadership Agents present PI metrics. Teams brainstorm process improvements.</td>
+      <td>Participate in identifying systemic issues. Propose solutions.</td>
+    </tr>
+  </table>
+
+  <h2>The Four Key Enterprise Dynamics to Simulate</h2>
+
+  <div class="card-grid-2">
+    <div class="card card-accent-red">
+      <h4>1. Cross-Team Dependency Hell</h4>
+      <p>The Pharmacy Team needs a Billing API endpoint that hasn't been built yet. The Auth Team has a deployment freeze. The Reporting Team needs event schemas to be finalized before they can proceed.</p>
+      <p style="margin-top:0.75rem; font-size:13px; color:var(--ink3)"><em>Simulation mechanism:</em> Dependency Graph Agent tracks which tickets are blocked by other teams. Blockers surface in standup, Scrum of Scrums, and direct Slack DMs.</p>
+    </div>
+    <div class="card card-accent-blue">
+      <h4>2. Ownership vs. Team Work</h4>
+      <p>The simulation tracks what the user personally owned (stories they claimed, PRs they opened, tickets they moved) vs. what the team did collectively. This is directly scored in the PI review.</p>
+      <p style="margin-top:0.75rem; font-size:13px; color:var(--ink3)"><em>Simulation mechanism:</em> All user actions are tagged. The evaluation engine can generate a "STAR-format story" at the end: what did YOU do vs. what did the team do?</p>
+    </div>
+    <div class="card card-accent-green">
+      <h4>3. Changing Requirements Mid-Sprint</h4>
+      <p>A compliance officer injects a new security requirement on Sprint Day 3. A hospital client escalates an emergency patch. A stakeholder reprioritizes the backlog during an active sprint.</p>
+      <p style="margin-top:0.75rem; font-size:13px; color:var(--ink3)"><em>Simulation mechanism:</em> Event injector fires with probability curves. PM Agent negotiates with Scrum Master Agent about scope changes. User must react appropriately.</p>
+    </div>
+    <div class="card card-accent-purple">
+      <h4>4. Production Incidents</h4>
+      <p>"The patient registration endpoint is returning 500s for hospitals in the eastern region." The on-call rotation pulls in the user. War room Slack channel. Postmortem. Follow-up tickets.</p>
+      <p style="margin-top:0.75rem; font-size:13px; color:var(--ink3)"><em>Simulation mechanism:</em> Incident Agent fires at random. DevOps Agent provides log snippets. User must communicate status, investigate (simulated), and write postmortem.</p>
+    </div>
+  </div>
+
+  <h2>What a Developer Actually Owns in Enterprise SAFe</h2>
+  <p class="prose"><p>This is the insight the simulation must make visceral. Most developers in large orgs spend their time on these activities — not architecture design:</p></p>
+
+  <div class="card-grid-3">
+    <div class="card"><p><strong>Understanding existing systems</strong> — reading docs, asking senior devs, navigating legacy code sections</p></div>
+    <div class="card"><p><strong>Implementing scoped backlog items</strong> — stories that are 2–8 hours of actual work, inside defined boundaries</p></div>
+    <div class="card"><p><strong>Coordinating with adjacent teams</strong> — "I need the BillingService.GetInvoice endpoint to return X field"</p></div>
+    <div class="card"><p><strong>Writing and reviewing PRs</strong> — describing changes, responding to feedback, understanding others' changes</p></div>
+    <div class="card"><p><strong>Updating ticket statuses</strong> — moving cards, adding comments, linking PRs to stories</p></div>
+    <div class="card"><p><strong>Communicating blockers early</strong> — "I can't progress on HMIS-4421 until the Auth team merges their API changes"</p></div>
+    <div class="card"><p><strong>Participating authentically in ceremonies</strong> — not just attending, but contributing substance</p></div>
+    <div class="card"><p><strong>Asking architectural clarifications</strong> — "Should this validation logic live in the application layer or domain layer?"</p></div>
+    <div class="card"><p><strong>Handling unexpected complexity</strong> — "The legacy patient code doesn't follow the same pattern as the newer services"</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 3 — AGENTIC SYSTEM DESIGN
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h1 class="section-title">Agentic System Design</h1>
+    <span class="section-tag tag-ai">AI Architecture</span>
+  </div>
+
+  <p class="lead">The entire simulation runs on a multi-agent system where each AI persona has a defined role, persistent memory, and behavior patterns. The orchestrator coordinates them based on simulation events.</p>
+
+  <h2>The Agent Roster</h2>
+  <p class="prose"><p>Start with this core set. Agents share a company-wide context store, but each has their own persona context and short-term working memory.</p></p>
+
+  <div class="card-grid-2">
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-avatar" style="background:#c84b1a">SM</div>
+        <div>
+          <div class="agent-name">Priya Sharma</div>
+          <div class="agent-role">Scrum Master · Patient Management Team</div>
+        </div>
+      </div>
+      <div class="agent-body">
+        <p><strong>Behavior:</strong> Facilitates standups, sprint planning, retrospectives. Tracks velocity. Escalates blockers. Encourages team collaboration. Pushes back when scope is added mid-sprint.</p>
+        <p><strong>Personality:</strong> Process-driven, calm, slightly firm about agile discipline. Occasionally frustrated with the PM.</p>
+        <div class="agent-mem">
+          <span class="badge badge-blue">sprint state</span>
+          <span class="badge badge-blue">team velocity history</span>
+          <span class="badge badge-blue">blocker registry</span>
+          <span class="badge badge-blue">ceremony schedule</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-avatar" style="background:#1a6b8a">PM</div>
+        <div>
+          <div class="agent-name">Alex Chen</div>
+          <div class="agent-role">Product Manager · Patient Management</div>
+        </div>
+      </div>
+      <div class="agent-body">
+        <p><strong>Behavior:</strong> Writes and grooms stories. Prioritizes backlog. Pushes for features. Sometimes tries to add scope mid-sprint. Communicates with stakeholders.</p>
+        <p><strong>Personality:</strong> Business-focused, slightly impatient, negotiation-minded. Uses enterprise buzzwords liberally.</p>
+        <div class="agent-mem">
+          <span class="badge badge-green">product roadmap</span>
+          <span class="badge badge-green">stakeholder requirements</span>
+          <span class="badge badge-green">PI objectives</span>
+          <span class="badge badge-green">feature acceptance criteria</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-avatar" style="background:#2d7a3a">TL</div>
+        <div>
+          <div class="agent-name">Ravi Menon</div>
+          <div class="agent-role">Tech Lead · Patient Management Team</div>
+        </div>
+      </div>
+      <div class="agent-body">
+        <p><strong>Behavior:</strong> Reviews PRs. Gives architectural guidance. Flags technical debt. Mentors. Coordinates with Architecture team. Raises technical risks in planning.</p>
+        <p><strong>Personality:</strong> Deep technical knowledge, values clean code, protective of quality but pragmatic about delivery.</p>
+        <div class="agent-mem">
+          <span class="badge badge-purple">codebase structure</span>
+          <span class="badge badge-purple">ADR history</span>
+          <span class="badge badge-purple">technical debt log</span>
+          <span class="badge badge-purple">PR queue</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-avatar" style="background:#7a2d8a">SA</div>
+        <div>
+          <div class="agent-name">Diana Okonkwo</div>
+          <div class="agent-role">Solution Architect · Enterprise Architecture</div>
+        </div>
+      </div>
+      <div class="agent-body">
+        <p><strong>Behavior:</strong> Attends PI Planning. Reviews cross-team architectural decisions. Presents at System Demo. Enforces patterns. Weighs in on contested technical decisions.</p>
+        <p><strong>Personality:</strong> Systems thinker, values consistency, slightly intimidating to junior devs, fair when explained well.</p>
+        <div class="agent-mem">
+          <span class="badge badge-red">system architecture docs</span>
+          <span class="badge badge-red">all team ADRs</span>
+          <span class="badge badge-red">integration contracts</span>
+          <span class="badge badge-red">compliance requirements</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-avatar" style="background:#b8861a">QA</div>
+        <div>
+          <div class="agent-name">Marcus Webb</div>
+          <div class="agent-role">QA Lead · Patient Management Team</div>
+        </div>
+      </div>
+      <div class="agent-body">
+        <p><strong>Behavior:</strong> Reviews acceptance criteria. Raises defects. Asks for test scenarios. Holds up stories that aren't ready for testing. Chases devs for bug fixes.</p>
+        <p><strong>Personality:</strong> Detail-oriented, slightly adversarial in a healthy way, thorough.</p>
+        <div class="agent-mem">
+          <span class="badge badge-gold">test plans</span>
+          <span class="badge badge-gold">defect history</span>
+          <span class="badge badge-gold">regression suite state</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-avatar" style="background:#6b6760">BL</div>
+        <div>
+          <div class="agent-name">Sarah Kim</div>
+          <div class="agent-role">Billing Team Lead (Dependency Team)</div>
+        </div>
+      </div>
+      <div class="agent-body">
+        <p><strong>Behavior:</strong> Represents Billing Team in Scrum of Scrums. Updates on API delivery timelines. Source of dependency blockers. Negotiates delivery dates.</p>
+        <p><strong>Personality:</strong> Overworked, straight-talking, protective of her team's bandwidth.</p>
+        <div class="agent-mem">
+          <span class="badge badge-gray">billing team sprint state</span>
+          <span class="badge badge-gray">API contract status</span>
+          <span class="badge badge-gray">dependency log</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose" style="margin-top:1.5rem"><p>Additional agents to add later: DevOps/Platform Agent, CTO Agent (for PI demos), Compliance/Security Agent (injects regulatory surprises), Incident Commander Agent (for production issues), and peer developer agents on your team.</p></p>
+
+  <h2>Agent Memory Architecture</h2>
+
+  <div class="code-block">
+<span class="code-comment">// Three-tier memory model for each agent</span>
+
+<span class="code-key">Tier 1: Working Memory</span> (in-context)
+  → Current conversation thread
+  → Active sprint state
+  → Recent events (last 5 simulation days)
+  → User's last 3 messages to this agent
+
+<span class="code-key">Tier 2: Episodic Memory</span> (vector store — retrieved per query)
+  → Sprint history summaries
+  → Past conversation key moments
+  → Completed/failed ceremonies
+  → Interpersonal relationship state ("user communicated blocker well in Sprint 1")
+
+<span class="code-key">Tier 3: Semantic Memory</span> (static, loaded at startup)
+  → Company architecture documentation
+  → Agent persona definition
+  → Team context and backstory
+  → Domain knowledge (HMIS domain)
+  → Codebase structure map
+  </div>
+
+  <h2>Orchestration Framework Comparison</h2>
+
+  <table class="compare-table">
+    <tr>
+      <th>Framework</th>
+      <th>Best For</th>
+      <th>Beginner-Friendly?</th>
+      <th>Fit for This Project</th>
+    </tr>
+    <tr>
+      <td>CrewAI</td>
+      <td>Role-based multi-agent teams, sequential/hierarchical task flows</td>
+      <td>★★★★☆ — simple API, great for fast prototyping</td>
+      <td>Good for MVP agent crews. Limited for complex event-driven simulation flows.</td>
+    </tr>
+    <tr>
+      <td>LangGraph</td>
+      <td>Stateful, event-driven agent workflows. Complex conditional flows.</td>
+      <td>★★★☆☆ — steeper learning curve, very powerful once learned</td>
+      <td><span class="rec-badge">RECOMMENDED</span> Best for simulation engine. Graph nodes = simulation states. Edges = event triggers.</td>
+    </tr>
+    <tr>
+      <td>AutoGen</td>
+      <td>Multi-agent conversation, human-in-the-loop workflows</td>
+      <td>★★★☆☆ — research-oriented, powerful but complex</td>
+      <td>Good for the meeting simulation subsystem specifically. Less natural for game-loop style simulation.</td>
+    </tr>
+    <tr>
+      <td>OpenAI Agents SDK</td>
+      <td>Handoff-based multi-agent, tool use</td>
+      <td>★★★★☆ — clean API, good tooling</td>
+      <td>Excellent for individual agent behaviors. Limited for complex orchestration flows. Use with LangGraph.</td>
+    </tr>
+    <tr>
+      <td>Semantic Kernel</td>
+      <td>Enterprise .NET integration, plugin-based AI</td>
+      <td>★★★☆☆ — good for .NET devs</td>
+      <td>Interesting given the C#/.NET sim stack but adds complexity. Skip for now.</td>
+    </tr>
+    <tr>
+      <td>Custom Orchestration</td>
+      <td>Full control, maximum flexibility</td>
+      <td>★★☆☆☆ — requires deep understanding</td>
+      <td>Phase 3 option. Build custom event bus + state machine once you know what you need.</td>
+    </tr>
+  </table>
+
+  <div class="callout callout-green">
+    <div class="callout-label cl-green">Recommended architecture</div>
+    <p><strong>LangGraph</strong> as the simulation engine and orchestrator. <strong>Individual agents</strong> use direct LLM calls (Claude or GPT-4o) with system prompts defining their persona. <strong>Supabase</strong> for persistent state. <strong>Redis</strong> for the event bus. This combination is buildable by a beginner in weeks, not months.</p>
+    <p>Start with CrewAI for your first prototype (1 week), then graduate to LangGraph for the real implementation. The concepts transfer directly.</p>
+  </div>
+
+  <h2>Agent Communication Patterns</h2>
+
+  <div class="card-grid-3">
+    <div class="card card-accent-blue">
+      <h4>Broadcast</h4>
+      <p>An event fires → all relevant agents see it → each responds in their channel independently. Used for: standup time, sprint events, incident alerts.</p>
+    </div>
+    <div class="card card-accent-blue">
+      <h4>Directed Message</h4>
+      <p>One agent sends a message specifically to the user or another agent. Used for: PR review requests, blocker discussions, direct DMs.</p>
+    </div>
+    <div class="card card-accent-blue">
+      <h4>Conversational Thread</h4>
+      <p>User replies to an agent, agent maintains context and responds. Multi-turn. Used for: clarifying requirements, architectural discussions, blocker resolution.</p>
+    </div>
+    <div class="card card-accent-blue">
+      <h4>Meeting Simulation</h4>
+      <p>Multiple agents participate in sequence. Facilitator agent manages turns. Used for: sprint planning, retrospectives, PI planning.</p>
+    </div>
+    <div class="card card-accent-blue">
+      <h4>Async Reaction</h4>
+      <p>User action triggers delayed agent response (simulating real response time). Used for: PR review feedback arriving 2 hours later, blocker updates.</p>
+    </div>
+    <div class="card card-accent-blue">
+      <h4>Supervisor Pattern</h4>
+      <p>Orchestrator agent monitors simulation state → decides which agents to activate → manages narrative coherence. The "game master" layer.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 4 — TECH STACK
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h1 class="section-title">Modern Tech Stack</h1>
+    <span class="section-tag tag-stack">Implementation</span>
+  </div>
+
+  <p class="lead">Every choice is optimized for a solo developer building fast. No over-engineering. No premature scaling. Ship something real in 8 weeks.</p>
+
+  <div class="card card-accent-gold" style="margin-bottom:2rem">
+    <div class="card-label">North star principle</div>
+    <h4>If you can't explain why you need it in one sentence, you don't need it yet</h4>
+    <p>The biggest beginner trap is choosing technology for what it could do at scale, not what you need right now. This stack is chosen for speed of learning + speed of shipping.</p>
+  </div>
+
+  <div style="border:1px solid var(--border); border-radius:10px; overflow:hidden;">
+    <div class="stack-item" style="background:var(--paper2)">
+      <div class="stack-icon" style="background:#0070f3">FE</div>
+      <div>
+        <div class="stack-name">Frontend: Next.js 14 (App Router)</div>
+        <div class="stack-tool">next, typescript, tailwindcss, shadcn/ui</div>
+        <div class="stack-why">You're already using Next.js (per the HMIS stack). App Router + Server Components makes it easy to build the Slack-like interface. Shadcn/ui gives you professional UI components in minutes. TypeScript catches bugs before they waste your time.</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon" style="background:#512bd4">BE</div>
+      <div>
+        <div class="stack-name">Backend: Python + FastAPI</div>
+        <div class="stack-tool">fastapi, uvicorn, pydantic, langgraph</div>
+        <div class="stack-why">The AI/agent ecosystem is Python-first. LangGraph, LangChain, all vector DB SDKs — everything works best in Python. FastAPI is modern, fast, and has excellent async support for streaming AI responses. Don't use C# for the platform backend — use it only inside the simulated HMIS codebase context.</div>
+      </div>
+    </div>
+    <div class="stack-item" style="background:var(--paper2)">
+      <div class="stack-icon" style="background:#ef4444">AI</div>
+      <div>
+        <div class="stack-name">LLM: Claude 3.5 Sonnet (primary) + GPT-4o (backup)</div>
+        <div class="stack-tool">anthropic python SDK, openai SDK</div>
+        <div class="stack-why">Claude 3.5 Sonnet has excellent long-context reasoning for maintaining agent personas consistently. GPT-4o is a natural fallback. Avoid fine-tuning at this stage — prompt engineering with structured system prompts is sufficient and much faster to iterate.</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon" style="background:#3fcf8e">DB</div>
+      <div>
+        <div class="stack-name">Database + Auth: Supabase</div>
+        <div class="stack-tool">supabase, postgres, supabase auth, supabase realtime</div>
+        <div class="stack-why">One service gives you: PostgreSQL (for simulation state), Auth (user accounts), Realtime (for the Slack-like live updates), and file storage (for simulated documents). Supabase's free tier is generous. Their TypeScript SDK integrates perfectly with Next.js. This single choice eliminates 4 infrastructure decisions.</div>
+      </div>
+    </div>
+    <div class="stack-item" style="background:var(--paper2)">
+      <div class="stack-icon" style="background:#dc2626">VDB</div>
+      <div>
+        <div class="stack-name">Vector Database: Supabase pgvector (start) → Pinecone (scale)</div>
+        <div class="stack-tool">pgvector extension, openai embeddings</div>
+        <div class="stack-why">Supabase's pgvector extension gives you vector search inside your existing Postgres database. No extra service to manage. For agent episodic memory retrieval, this is sufficient for thousands of records. Only move to Pinecone if you're hitting performance limits at scale.</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon" style="background:#dc8a78">ORC</div>
+      <div>
+        <div class="stack-name">Agent Orchestration: LangGraph</div>
+        <div class="stack-tool">langgraph, langchain-core, langchain-anthropic</div>
+        <div class="stack-why">LangGraph models the simulation as a state machine — perfect for a time-stepped simulation engine. Nodes are simulation states (sprint day, ceremony type). Edges are transitions. Each node can call agents, update state, emit events. The visualization tools help you debug complex flows.</div>
+      </div>
+    </div>
+    <div class="stack-item" style="background:var(--paper2)">
+      <div class="stack-icon" style="background:#f59e0b">RT</div>
+      <div>
+        <div class="stack-name">Realtime: Supabase Realtime + Server-Sent Events</div>
+        <div class="stack-tool">supabase realtime, fastapi SSE (starlette)</div>
+        <div class="stack-why">Supabase Realtime handles broadcasting new messages to the frontend (the Slack-like live feed). FastAPI SSE handles streaming LLM responses token-by-token. No need for a separate WebSocket server. This combination is beginner-friendly and has good documentation.</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon" style="background:#8b5cf6">VOICE</div>
+      <div>
+        <div class="stack-name">Voice (Phase 3): ElevenLabs + Whisper</div>
+        <div class="stack-tool">elevenlabs API, openai whisper API</div>
+        <div class="stack-why">ElevenLabs gives each agent a unique voice personality. Whisper handles user speech-to-text. For meetings, you generate audio ahead-of-time (TTS of agent scripts) and stream them. This is Phase 3 — do NOT attempt this in your MVP. It's a significant complexity jump.</div>
+      </div>
+    </div>
+    <div class="stack-item" style="background:var(--paper2)">
+      <div class="stack-icon" style="background:#059669">OBS</div>
+      <div>
+        <div class="stack-name">Observability: LangSmith + Sentry</div>
+        <div class="stack-tool">langsmith, sentry-python, sentry nextjs</div>
+        <div class="stack-why">LangSmith traces every LLM call — you can see exactly what prompt was sent, what was returned, token costs, latency. Critical for debugging why an agent said something wrong. Sentry catches frontend and backend errors. Both have generous free tiers.</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon" style="background:#0ea5e9">DEP</div>
+      <div>
+        <div class="stack-name">Deployment: Vercel (frontend) + Railway (backend)</div>
+        <div class="stack-tool">vercel, railway, docker</div>
+        <div class="stack-why">Vercel deploys Next.js apps with zero configuration — it's made by the same team. Railway runs Python FastAPI with minimal setup, supports environment variables cleanly, and has a free tier. Both have GitHub integration for automatic deployments on push. You can have production running in an afternoon.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 5 — LEARNING ROADMAP
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h1 class="section-title">Learning Roadmap</h1>
+    <span class="section-tag tag-gold">Growth Path</span>
+  </div>
+
+  <p class="lead">This is not a curriculum — it's a series of builds. You will learn each thing by using it in a mini-project that feeds directly into HealthGrid. No throwaway exercises.</p>
+
+  <div class="callout callout-red">
+    <div class="callout-label cl-red">Golden rule</div>
+    <p>Never spend more than 3 days on tutorials without building something. If you're watching a tutorial on day 4, you're procrastinating. The frustration of building is the actual learning.</p>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase-block no-break">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-num" style="background:#c84b1a">1</div>
+      <div class="phase-title">AI Foundations — Talk to an Agent</div>
+      <div class="phase-duration">Weeks 1–2</div>
+      <div class="phase-chevron">▾</div>
+    </div>
+    <div class="phase-body">
+      <p style="font-size:14px; color:var(--ink2); margin:1rem 0 0.5rem">Goal: Build a single AI persona that can maintain a consistent character and memory across a multi-turn conversation. Specifically: Priya the Scrum Master.</p>
+      <div class="phase-grid">
+        <div>
+          <div class="phase-col-label">Build</div>
+          <ul class="phase-list">
+            <li>Python FastAPI app with a /chat endpoint</li>
+            <li>System prompt that defines Priya's persona</li>
+            <li>Store conversation history in Supabase</li>
+            <li>Minimal Next.js chat UI to interact with her</li>
+            <li>Priya can discuss a fake standup scenario</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Learn</div>
+          <ul class="phase-list">
+            <li>Anthropic Python SDK basics</li>
+            <li>System prompt design for personas</li>
+            <li>Conversation history management</li>
+            <li>FastAPI basics (routes, Pydantic models)</li>
+            <li>Supabase Python client</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Resources</div>
+          <ul class="phase-list">
+            <li>docs.anthropic.com — Messages API</li>
+            <li>Anthropic cookbook on GitHub</li>
+            <li>FastAPI official docs (fastapi.tiangolo.com)</li>
+            <li>Supabase Python quickstart</li>
+            <li>YouTube: Tech With Tim — FastAPI</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Milestone</div>
+          <ul class="phase-list">
+            <li>Have a 10-message conversation with Priya about a fake sprint blocker</li>
+            <li>Priya remembers things said earlier in the chat</li>
+            <li>Deployed on Railway + Vercel</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase-block no-break">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-num" style="background:#1a6b8a">2</div>
+      <div class="phase-title">Multi-Agent Ensemble — The Team Exists</div>
+      <div class="phase-duration">Weeks 3–4</div>
+      <div class="phase-chevron">▾</div>
+    </div>
+    <div class="phase-body">
+      <p style="font-size:14px; color:var(--ink2); margin:1rem 0 0.5rem">Goal: 4–5 agents with distinct personas that can all participate in a simulated standup. They each post their update. User posts theirs. Agents react to what each other says.</p>
+      <div class="phase-grid">
+        <div>
+          <div class="phase-col-label">Build</div>
+          <ul class="phase-list">
+            <li>5 agent personas (Priya, Alex, Ravi, Marcus, user)</li>
+            <li>Standup runner that fires all agents sequentially</li>
+            <li>Slack-like UI with channels and threads</li>
+            <li>Agents reference a shared sprint context</li>
+            <li>Agents can mention each other and user</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Learn</div>
+          <ul class="phase-list">
+            <li>CrewAI basics (agent/task/crew primitives)</li>
+            <li>Prompt chaining patterns</li>
+            <li>Supabase Realtime subscriptions</li>
+            <li>Next.js Server-Sent Events consumption</li>
+            <li>LLM streaming responses</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Resources</div>
+          <ul class="phase-list">
+            <li>CrewAI docs + examples on GitHub</li>
+            <li>Supabase Realtime docs</li>
+            <li>YouTube: Greg Kamradt — LangChain patterns</li>
+            <li>YouTube: Sam Witteveen — CrewAI tutorials</li>
+            <li>LangChain cookbook — multi-agent examples</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Milestone</div>
+          <ul class="phase-list">
+            <li>Full team standup runs automatically</li>
+            <li>User's response triggers agent reactions</li>
+            <li>Messages appear in real time in UI</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase-block no-break">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-num" style="background:#2d7a3a">3</div>
+      <div class="phase-title">Simulation Engine — Time Passes</div>
+      <div class="phase-duration">Weeks 5–6</div>
+      <div class="phase-chevron">▾</div>
+    </div>
+    <div class="phase-body">
+      <p style="font-size:14px; color:var(--ink2); margin:1rem 0 0.5rem">Goal: A time-stepped simulation engine built in LangGraph. The simulation advances through sprint events and triggers the right agents at the right times.</p>
+      <div class="phase-grid">
+        <div>
+          <div class="phase-col-label">Build</div>
+          <ul class="phase-list">
+            <li>LangGraph simulation state machine</li>
+            <li>Sprint event calendar (standup, planning, review)</li>
+            <li>Blocker injection system (probabilistic)</li>
+            <li>Ticket/story management in Supabase</li>
+            <li>Jira-like ticket UI with status columns</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Learn</div>
+          <ul class="phase-list">
+            <li>LangGraph fundamentals (nodes, edges, state)</li>
+            <li>State machine design patterns</li>
+            <li>Event-driven architecture basics</li>
+            <li>Background job scheduling (APScheduler)</li>
+            <li>Postgres triggers / Supabase edge functions</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Resources</div>
+          <ul class="phase-list">
+            <li>LangGraph official docs + tutorials</li>
+            <li>YouTube: LangChain official — LangGraph videos</li>
+            <li>APScheduler docs</li>
+            <li>Supabase edge functions docs</li>
+            <li>Jake Van Cleef — AI workflow patterns (YouTube)</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Milestone</div>
+          <ul class="phase-list">
+            <li>Simulation runs a full sprint automatically</li>
+            <li>Standup fires at scheduled sim-time</li>
+            <li>A blocker injects mid-sprint</li>
+            <li>Sprint review happens at end</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="phase-block no-break">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-num" style="background:#7a2d8a">4</div>
+      <div class="phase-title">Context & Memory — The World Remembers</div>
+      <div class="phase-duration">Weeks 7–8</div>
+      <div class="phase-chevron">▾</div>
+    </div>
+    <div class="phase-body">
+      <p style="font-size:14px; color:var(--ink2); margin:1rem 0 0.5rem">Goal: Agents remember what happened in previous sprints. The company context (architecture docs, past decisions) is retrievable. The simulation feels like it has history.</p>
+      <div class="phase-grid">
+        <div>
+          <div class="phase-col-label">Build</div>
+          <ul class="phase-list">
+            <li>pgvector setup in Supabase</li>
+            <li>Company context document embedding pipeline</li>
+            <li>Agent episodic memory system</li>
+            <li>RAG retrieval for agent grounding</li>
+            <li>Company wiki UI (simulated internal docs)</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Learn</div>
+          <ul class="phase-list">
+            <li>Embeddings + vector search concepts</li>
+            <li>RAG (retrieval augmented generation) patterns</li>
+            <li>pgvector SQL operations</li>
+            <li>Chunking and embedding strategies</li>
+            <li>Memory management for long-running agents</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Resources</div>
+          <ul class="phase-list">
+            <li>Supabase vector search docs</li>
+            <li>LangChain RAG tutorials</li>
+            <li>YouTube: Dave Ebbelaar — RAG tutorials</li>
+            <li>Anthropic docs — context windows best practices</li>
+            <li>GitHub: langchain-ai/rag-from-scratch</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Milestone</div>
+          <ul class="phase-list">
+            <li>Agent references past sprint event in conversation</li>
+            <li>Ravi can answer "what's the Patient Service architecture?" from docs</li>
+            <li>Context stays consistent across 2 simulated sprints</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 5 -->
+  <div class="phase-block no-break">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <div class="phase-num" style="background:#b8861a">5</div>
+      <div class="phase-title">Evaluation & Polish — It Teaches</div>
+      <div class="phase-duration">Weeks 9–10</div>
+      <div class="phase-chevron">▾</div>
+    </div>
+    <div class="phase-body">
+      <p style="font-size:14px; color:var(--ink2); margin:1rem 0 0.5rem">Goal: The simulation evaluates the user's performance. At the end of a sprint, you get a scorecard. The platform generates interview-ready STAR stories about your experience.</p>
+      <div class="phase-grid">
+        <div>
+          <div class="phase-col-label">Build</div>
+          <ul class="phase-list">
+            <li>Behavior tracking system (log all user actions)</li>
+            <li>Rubric-based sprint scorecard</li>
+            <li>STAR story generator for interview prep</li>
+            <li>Performance dashboard with charts</li>
+            <li>Achievement/milestone system</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Learn</div>
+          <ul class="phase-list">
+            <li>LLM-as-evaluator patterns</li>
+            <li>Structured output with Anthropic tools</li>
+            <li>User analytics with Supabase</li>
+            <li>React chart libraries (Recharts)</li>
+            <li>STAR story framework (for the prompt design)</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Resources</div>
+          <ul class="phase-list">
+            <li>Anthropic docs — tool use / structured outputs</li>
+            <li>LangSmith evaluation docs</li>
+            <li>STAR interview method (Google it — 1 page)</li>
+            <li>Recharts documentation</li>
+          </ul>
+        </div>
+        <div>
+          <div class="phase-col-label">Milestone</div>
+          <ul class="phase-list">
+            <li>Sprint 1 scorecard is generated</li>
+            <li>STAR story generated: "Tell me about a time you handled a blocker"</li>
+            <li>User can export their experience summary</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 6 — MVP STRATEGY
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h1 class="section-title">MVP Strategy</h1>
+    <span class="section-tag tag-stack">Build Order</span>
+  </div>
+
+  <p class="lead">The biggest mistake you can make is trying to build the full vision before validating the core experience. The core experience is: <strong>talking to AI coworkers feels real.</strong> That's what you prove first.</p>
+
+  <div class="callout callout-gold">
+    <div class="callout-label cl-gold">The MVP question</div>
+    <p>What is the <em>smallest thing</em> that would make someone say "wow, that actually feels like working at a company"? That's your MVP. Everything else is polish or features.</p>
+    <p>Answer: A working standup with 4 AI coworkers + a simulated sprint board where you can move tickets. That's it.</p>
+  </div>
+
+  <div class="mvp-tier">
+    <div class="mvp-header" style="background:rgba(200,75,26,0.06)">
+      <span class="mvp-v-badge" style="background:var(--accent)">v0.1</span>
+      <span class="mvp-title">Proof of Concept — Does It Feel Real?</span>
+      <span class="mvp-timeline">3 weeks</span>
+    </div>
+    <div class="mvp-body">
+      <p style="font-size:14px; color:var(--ink2); margin-top:0.75rem">The goal: show to 3–5 developers and get the reaction "this actually feels like my job."</p>
+      <div class="mvp-features">
+        <div class="mvp-feat mvp-feat-incl">4 AI agent personas</div>
+        <div class="mvp-feat mvp-feat-incl">Daily standup simulation</div>
+        <div class="mvp-feat mvp-feat-incl">Slack-like message UI</div>
+        <div class="mvp-feat mvp-feat-incl">5 hardcoded sprint stories</div>
+        <div class="mvp-feat mvp-feat-incl">Basic ticket board (Kanban)</div>
+        <div class="mvp-feat mvp-feat-incl">One simulated blocker</div>
+        <div class="mvp-feat mvp-feat-fake">No real auth (localStorage)</div>
+        <div class="mvp-feat mvp-feat-fake">Hardcoded company context</div>
+        <div class="mvp-feat mvp-feat-fake">No time advancement (manual triggers)</div>
+        <div class="mvp-feat mvp-feat-cut">No voice</div>
+        <div class="mvp-feat mvp-feat-cut">No evaluation engine</div>
+        <div class="mvp-feat mvp-feat-cut">No PI planning</div>
+        <div class="mvp-feat mvp-feat-cut">No multi-sprint continuity</div>
+        <div class="mvp-feat mvp-feat-cut">No vector memory</div>
+      </div>
+      <p style="font-size:12px; color:var(--ink3); margin-top:0.75rem"><span style="color:var(--accent3)">✓ Include</span> &nbsp;·&nbsp; <span style="color:var(--gold)">~ Fake/hardcode for now</span> &nbsp;·&nbsp; <span style="color:var(--ink3)">– Cut entirely</span></p>
+    </div>
+  </div>
+
+  <div class="mvp-tier">
+    <div class="mvp-header" style="background:rgba(26,107,138,0.06)">
+      <span class="mvp-v-badge" style="background:var(--accent2)">v0.5</span>
+      <span class="mvp-title">Core Loop — A Full Sprint Runs</span>
+      <span class="mvp-timeline">Weeks 4–8</span>
+    </div>
+    <div class="mvp-body">
+      <p style="font-size:14px; color:var(--ink2); margin-top:0.75rem">The goal: a user can run through a complete 2-week sprint simulation. The experience arc is complete even if not polished.</p>
+      <div class="mvp-features">
+        <div class="mvp-feat mvp-feat-incl">Supabase auth + user accounts</div>
+        <div class="mvp-feat mvp-feat-incl">Time advancement engine (LangGraph)</div>
+        <div class="mvp-feat mvp-feat-incl">Sprint planning ceremony</div>
+        <div class="mvp-feat mvp-feat-incl">Automated standup triggers</div>
+        <div class="mvp-feat mvp-feat-incl">Dynamic blocker injection</div>
+        <div class="mvp-feat mvp-feat-incl">Sprint review + retrospective</div>
+        <div class="mvp-feat mvp-feat-incl">Cross-team dependency scenario</div>
+        <div class="mvp-feat mvp-feat-incl">Basic sprint scorecard</div>
+        <div class="mvp-feat mvp-feat-incl">Vector memory for agents</div>
+        <div class="mvp-feat mvp-feat-fake">Company wiki (static pre-generated)</div>
+        <div class="mvp-feat mvp-feat-fake">PR reviews (text only, no real code)</div>
+        <div class="mvp-feat mvp-feat-cut">No PI planning</div>
+        <div class="mvp-feat mvp-feat-cut">No voice agents</div>
+        <div class="mvp-feat mvp-feat-cut">No production incident simulation</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mvp-tier">
+    <div class="mvp-header" style="background:rgba(45,122,58,0.06)">
+      <span class="mvp-v-badge" style="background:var(--accent3)">v1.0</span>
+      <span class="mvp-title">Full PI Experience — Launch-Ready</span>
+      <span class="mvp-timeline">Weeks 9–16</span>
+    </div>
+    <div class="mvp-body">
+      <p style="font-size:14px; color:var(--ink2); margin-top:0.75rem">The goal: a developer can run through an entire Program Increment (2 sprints + PI planning + retrospective) and emerge with interview-ready stories.</p>
+      <div class="mvp-features">
+        <div class="mvp-feat mvp-feat-incl">Full PI planning ceremony</div>
+        <div class="mvp-feat mvp-feat-incl">2-sprint simulation arc</div>
+        <div class="mvp-feat mvp-feat-incl">Production incident simulation</div>
+        <div class="mvp-feat mvp-feat-incl">PI System Demo</div>
+        <div class="mvp-feat mvp-feat-incl">Inspect & Adapt workshop</div>
+        <div class="mvp-feat mvp-feat-incl">STAR story generator</div>
+        <div class="mvp-feat mvp-feat-incl">Experience export (PDF/LinkedIn)</div>
+        <div class="mvp-feat mvp-feat-incl">Multiple team tracks (choose your team)</div>
+        <div class="mvp-feat mvp-feat-incl">Scrum of Scrums simulation</div>
+        <div class="mvp-feat mvp-feat-incl">Full evaluation rubric</div>
+        <div class="mvp-feat mvp-feat-fake">Voice agents (ElevenLabs — meetings only)</div>
+        <div class="mvp-feat mvp-feat-fake">Codebase exploration UI (tree view only)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 7 — EXECUTION PLAN
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h1 class="section-title">Development Execution Plan</h1>
+    <span class="section-tag tag-stack">Weekly Plan</span>
+  </div>
+
+  <p class="lead">16 weeks. Each week has a concrete deliverable. If you're stuck for more than 2 days on one thing, ship a simpler version and move forward.</p>
+
+  <div style="border:1px solid var(--border); border-radius:10px; overflow:hidden; margin:2rem 0;">
+
+    <div class="week-row" style="background:var(--paper2); padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 1</div>
+      <div class="week-tasks">
+        <div class="week-title">Environment Setup + First Agent</div>
+        <ul class="week-items">
+          <li>Python venv, FastAPI hello world, Supabase project created</li>
+          <li>Anthropic SDK installed, first LLM call working</li>
+          <li>Priya Sharma persona defined in system prompt</li>
+          <li>Basic /chat endpoint in FastAPI returns Priya's response</li>
+          <li>Conversation history stored in Supabase</li>
+        </ul>
+        <span class="week-milestone">🏁 Ship: "I can have a multi-turn chat with Priya"</span>
+      </div>
+    </div>
+
+    <div class="week-row" style="padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 2</div>
+      <div class="week-tasks">
+        <div class="week-title">Chat UI + Next.js Frontend</div>
+        <ul class="week-items">
+          <li>Next.js app created, Tailwind + shadcn/ui configured</li>
+          <li>Basic Slack-like channel UI with message feed</li>
+          <li>API connection from Next.js to FastAPI</li>
+          <li>SSE streaming for live AI responses</li>
+          <li>Supabase auth setup (email/password)</li>
+        </ul>
+        <span class="week-milestone">🏁 Ship: Deployed app where I chat with Priya in a Slack-like UI</span>
+      </div>
+    </div>
+
+    <div class="week-row" style="background:var(--paper2); padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 3</div>
+      <div class="week-tasks">
+        <div class="week-title">4 Agent Personas + Standup Simulation</div>
+        <ul class="week-items">
+          <li>Priya, Alex, Ravi, Marcus personas defined</li>
+          <li>Standup runner: fires all agents in sequence with standup template</li>
+          <li>Agents react to each other's updates (brief follow-up comments)</li>
+          <li>User can post their own standup</li>
+          <li>Channels: #team-general, #standup, #incidents</li>
+        </ul>
+        <span class="week-milestone">🏁 Ship: Full team standup runs with 4 agents responding</span>
+      </div>
+    </div>
+
+    <div class="week-row" style="padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 4</div>
+      <div class="week-tasks">
+        <div class="week-title">Sprint Board + Story Management</div>
+        <ul class="week-items">
+          <li>Supabase schema: sprints, stories, assignments, statuses</li>
+          <li>Kanban board UI (Todo → In Progress → In Review → Done)</li>
+          <li>5 hardcoded stories seeded for the sprint</li>
+          <li>User can claim and move stories</li>
+          <li>PM Agent comments on story updates</li>
+        </ul>
+        <span class="week-milestone">🏁 MVP v0.1 COMPLETE — show to developers for feedback</span>
+      </div>
+    </div>
+
+    <div class="week-row" style="background:var(--paper2); padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 5–6</div>
+      <div class="week-tasks">
+        <div class="week-title">LangGraph Simulation Engine</div>
+        <ul class="week-items">
+          <li>Learn LangGraph state machine fundamentals (2 days tutorial)</li>
+          <li>Build sprint state machine: planning → sprinting → review → retro</li>
+          <li>Time advancement: 1 click = 1 sim-day (manual for now)</li>
+          <li>Event triggers: standup at 9am sim-time, planning on day 1, review on day 10</li>
+          <li>Blocker injection: 30% chance on any given sim-day</li>
+        </ul>
+        <span class="week-milestone">🏁 Ship: Full sprint auto-runs, blockers appear, ceremonies fire</span>
+      </div>
+    </div>
+
+    <div class="week-row" style="padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 7–8</div>
+      <div class="week-tasks">
+        <div class="week-title">Vector Memory + Company Context</div>
+        <ul class="week-items">
+          <li>pgvector enabled in Supabase, embedding pipeline built</li>
+          <li>Company context docs written and embedded (20–30 documents)</li>
+          <li>RAG retrieval on agent message generation</li>
+          <li>Agent episodic memory: key events summarized and stored</li>
+          <li>Simulated company wiki UI (/wiki route in Next.js)</li>
+        </ul>
+        <span class="week-milestone">🏁 Ship: Ravi answers architecture questions from real (simulated) docs</span>
+      </div>
+    </div>
+
+    <div class="week-row" style="background:var(--paper2); padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 9–10</div>
+      <div class="week-tasks">
+        <div class="week-title">Sprint Planning + Backlog Refinement Ceremonies</div>
+        <ul class="week-items">
+          <li>Sprint planning: PM presents stories, team estimates, user selects commitments</li>
+          <li>Backlog refinement: PM + BA agent present upcoming stories, clarification Q&A</li>
+          <li>Cross-team dependency channel: Sarah Kim (Billing TL) posts API status</li>
+          <li>Scrum of Scrums simulation (every sim-Wednesday)</li>
+          <li>Sprint review ceremony with stakeholder feedback</li>
+        </ul>
+        <span class="week-milestone">🏁 Ship: Full sprint ceremonies all simulated end-to-end</span>
+      </div>
+    </div>
+
+    <div class="week-row" style="padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 11–12</div>
+      <div class="week-tasks">
+        <div class="week-title">PI Planning + Evaluation Engine</div>
+        <ul class="week-items">
+          <li>PI Planning: 2-day event with all team agents participating</li>
+          <li>PI objectives setting for the team</li>
+          <li>Behavior tracking: log every user action with metadata</li>
+          <li>Sprint scorecard: ownership, communication, blocker handling, velocity</li>
+          <li>STAR story generator prompt engineering</li>
+        </ul>
+        <span class="week-milestone">🏁 Ship: User completes PI planning + gets sprint 1 scorecard</span>
+      </div>
+    </div>
+
+    <div class="week-row" style="background:var(--paper2); padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 13–14</div>
+      <div class="week-tasks">
+        <div class="week-title">Production Incident + PI System Demo</div>
+        <ul class="week-items">
+          <li>Incident simulation: random trigger during sprint, war room channel</li>
+          <li>DevOps agent provides fake log snippets</li>
+          <li>Post-incident review ceremony</li>
+          <li>PI System Demo: CTO + VP attend, ask cross-team questions</li>
+          <li>Inspect & Adapt workshop simulation</li>
+        </ul>
+        <span class="week-milestone">🏁 Ship: Full 2-sprint PI experience complete</span>
+      </div>
+    </div>
+
+    <div class="week-row" style="padding-left:1.25rem; padding-right:1.25rem">
+      <div class="week-label">Week 15–16</div>
+      <div class="week-tasks">
+        <div class="week-title">Polish + Launch Prep</div>
+        <ul class="week-items">
+          <li>Experience export: PDF summary with STAR stories</li>
+          <li>Onboarding flow (orientation meeting with Priya on Day 0)</li>
+          <li>LangSmith tracing and cost monitoring</li>
+          <li>Performance optimization: caching common agent responses</li>
+          <li>Landing page, video demo, public GitHub, launch post</li>
+        </ul>
+        <span class="week-milestone">🏁 v1.0 PUBLIC LAUNCH</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 8 — PORTFOLIO + CAREER
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h1 class="section-title">Portfolio + Career Positioning</h1>
+    <span class="section-tag tag-career">Strategy</span>
+  </div>
+
+  <p class="lead">This project demonstrates simultaneously: enterprise domain knowledge, AI engineering depth, systems design thinking, and product sense. Each of those independently gets you into different rooms.</p>
+
+  <h2>The Interview Angles</h2>
+
+  <div class="card-grid-2">
+    <div class="card card-accent-red">
+      <h4>For Enterprise Engineering Roles</h4>
+      <p>"I built a simulation of SAFe enterprise workflows because I wanted to deeply understand how large-scale software delivery actually works. I designed the dependency graph between 9 service teams, simulated PI planning, sprint ceremonies, and cross-team blockers."</p>
+      <p style="margin-top:0.75rem; font-size:13px; color:var(--ink3)">This shows you understand the domain, not just the code.</p>
+    </div>
+    <div class="card card-accent-blue">
+      <h4>For AI Engineering Roles</h4>
+      <p>"I architected a multi-agent system using LangGraph for orchestration, Claude for LLM inference, pgvector for agent memory retrieval, and a three-tier memory model (working/episodic/semantic). Each agent has persistent persona context and reacts to simulation events."</p>
+      <p style="margin-top:0.75rem; font-size:13px; color:var(--ink3)">This shows genuine AI systems engineering.</p>
+    </div>
+    <div class="card card-accent-green">
+      <h4>For Systems Design Interviews</h4>
+      <p>You can literally draw the system — the simulation engine, agent orchestrator, event bus, context store, communication layer. You know exactly why each component exists and what tradeoffs you made. You built it.</p>
+      <p style="margin-top:0.75rem; font-size:13px; color:var(--ink3)">Ownership at the system level, not just the feature level.</p>
+    </div>
+    <div class="card card-accent-purple">
+      <h4>For Product Engineering Roles</h4>
+      <p>"I identified a real market gap — developers being told they lack enterprise experience — and built a product solution. I went from insight to shipped product in 16 weeks as a solo developer."</p>
+      <p style="margin-top:0.75rem; font-size:13px; color:var(--ink3)">Product sense + execution. Rare combination.</p>
+    </div>
+  </div>
+
+  <h2>How to Document This Publicly</h2>
+
+  <h3>GitHub</h3>
+  <p class="prose"><p>Write a README that is genuinely impressive. Include: the problem statement, the architecture diagram (export from your LangGraph visualization), the tech stack with rationale, a demo video embed, and a section on what you learned. Most GitHub repos have terrible READMEs — yours stands out simply by being thorough.</p></p>
+
+  <div class="code-block">
+<span class="code-comment">## README structure that works</span>
+
+<span class="code-key">1. The Problem</span> (1 paragraph — the interview feedback insight)
+<span class="code-key">2. The Solution</span> (what HealthGrid does, who it's for)
+<span class="code-key">3. Demo</span> (GIF or Loom video — non-negotiable)
+<span class="code-key">4. Architecture</span> (diagram + explanation of key decisions)
+<span class="code-key">5. Tech Stack</span> (table with WHY each choice)
+<span class="code-key">6. What I Learned</span> (most valuable section for hiring managers)
+<span class="code-key">7. What I'd Do Differently</span> (shows engineering maturity)
+  </div>
+
+  <h3>LinkedIn Content Strategy</h3>
+  <p class="prose"><p>Post a 3-part series as you build, not just when you finish:</p></p>
+
+  <div class="card-grid-3">
+    <div class="card"><h4>Post 1 (Week 4)</h4><p>"I built a standup that runs itself. Here's how I gave 4 AI agents distinct personalities and made them disagree about sprint scope."</p></div>
+    <div class="card"><h4>Post 2 (Week 8)</h4><p>"What happens when an AI Scrum Master enforces process on an AI Product Manager who wants to add scope mid-sprint? Spoiler: it's chaotic."</p></div>
+    <div class="card"><h4>Post 3 (Week 16)</h4><p>"I simulated an entire SAFe Program Increment with AI. Here's what it taught me about enterprise software delivery that no tutorial ever could."</p></div>
+  </div>
+
+  <h3>Technical Writing</h3>
+  <p class="prose"><p>Write at least one deep technical post on dev.to or your own blog: <strong>"How I designed the memory architecture for a 20-agent enterprise simulation."</strong> This single article will generate more career opportunities than any resume line item. It demonstrates writing ability, depth of thought, and willingness to share knowledge — all valued in senior engineering roles.</p></p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 9 — RISKS & REALITY CHECK
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h1 class="section-title">Risks & Reality Check</h1>
+    <span class="section-tag tag-red">Honesty</span>
+  </div>
+
+  <p class="lead">This is an ambitious project. Here is the honest assessment of where it gets hard and where most people quit. Knowing these in advance is your advantage.</p>
+
+  <div style="border:1px solid var(--border); border-radius:10px; overflow:hidden; margin:2rem 0;">
+    <div class="risk-item"><div>Risk</div><div>Impact</div><div>Mitigation</div></div>
+
+    <div class="risk-item">
+      <div>
+        <div class="risk-name">Agent personality drift</div>
+        <div class="risk-desc">After long conversations, agents start losing their character and sound generic. This breaks immersion entirely.</div>
+      </div>
+      <div><div class="risk-dot risk-high">H</div></div>
+      <div style="font-size:13px; color:var(--ink2)">Inject persona reminder into every system prompt. Summarize long contexts rather than truncating. Test agents with 20+ turn conversations before shipping.</div>
+    </div>
+
+    <div class="risk-item">
+      <div>
+        <div class="risk-name">LLM cost spiraling</div>
+        <div class="risk-desc">20 agents generating responses across a full PI simulation could cost $50–200 per user session at full context length.</div>
+      </div>
+      <div><div class="risk-dot risk-high">H</div></div>
+      <div style="font-size:13px; color:var(--ink2)">Cache common agent responses. Use Claude Haiku for background agents, Sonnet only for primary interactions. Implement token budgets per session. Test real costs early.</div>
+    </div>
+
+    <div class="risk-item">
+      <div>
+        <div class="risk-name">Simulation coherence breaks down</div>
+        <div class="risk-desc">Agents start contradicting each other about facts ("the Billing API is ready" / "the Billing API is blocked"). Immersion shatters.</div>
+      </div>
+      <div><div class="risk-dot risk-high">H</div></div>
+      <div style="font-size:13px; color:var(--ink2)">Single source of truth: all factual state (API status, blocker status, story status) lives in Supabase, not in agent memories. Agents query state before making claims. This is your most important architectural rule.</div>
+    </div>
+
+    <div class="risk-item">
+      <div>
+        <div class="risk-name">Meeting simulation feeling unnatural</div>
+        <div class="risk-desc">AI-generated meetings sound like they were generated by AI. The cadence is off, nobody interrupts, everything is too polished.</div>
+      </div>
+      <div><div class="risk-dot risk-med">M</div></div>
+      <div style="font-size:13px; color:var(--ink2)">Add explicit personality friction to prompts: "Ravi tends to interrupt. Alex over-explains. Marcus is skeptical of new features." Add realistic imperfections: typos, unfinished sentences, "let me circle back on that." Study real meeting transcripts.</div>
+    </div>
+
+    <div class="risk-item">
+      <div>
+        <div class="risk-name">LangGraph complexity creep</div>
+        <div class="risk-desc">LangGraph graphs become very complex fast. Debugging a failing state transition at simulation day 7 is non-trivial.</div>
+      </div>
+      <div><div class="risk-dot risk-med">M</div></div>
+      <div style="font-size:13px; color:var(--ink2)">Keep the state machine as simple as possible for as long as possible. Use LangSmith for tracing. Draw the graph before implementing. Add nodes incrementally — never try to build the whole thing at once.</div>
+    </div>
+
+    <div class="risk-item">
+      <div>
+        <div class="risk-name">Scope explosion</div>
+        <div class="risk-desc">You will want to add voice, mobile, 50 agents, real code execution, real GitHub integration... this kills solo projects.</div>
+      </div>
+      <div><div class="risk-dot risk-high">H</div></div>
+      <div style="font-size:13px; color:var(--ink2)">Write your MVP scope on a sticky note and look at it before opening your laptop every day. Every new idea goes on a "v2 list." The v2 list should never gate v1 shipping.</div>
+    </div>
+
+    <div class="risk-item">
+      <div>
+        <div class="risk-name">User experience design underestimated</div>
+        <div class="risk-desc">The simulation is technically impressive but users don't know what they're supposed to do. Onboarding is hard.</div>
+      </div>
+      <div><div class="risk-dot risk-med">M</div></div>
+      <div style="font-size:13px; color:var(--ink2)">Build onboarding first, not last. Day 0 of the simulation = orientation meeting with Priya. She explains the team, what your first week looks like, and what's expected of you. Explicit guidance inside the simulation.</div>
+    </div>
+
+    <div class="risk-item">
+      <div>
+        <div class="risk-name">Voice agents are genuinely complex</div>
+        <div class="risk-desc">Real-time voice with multiple agents, latency, turn-taking, interruption handling — this is a month-long feature at minimum. Not a week.</div>
+      </div>
+      <div><div class="risk-dot risk-low">L</div></div>
+      <div style="font-size:13px; color:var(--ink2)">Treat voice as v1.1 or v2. For meetings, pre-generate audio (TTS of a scripted exchange) rather than real-time voice. Much simpler. Still impressive.</div>
+    </div>
+
+  </div>
+
+  <div class="callout callout-red">
+    <div class="callout-label cl-red">The #1 thing that will kill this project</div>
+    <p>Spending 3 weeks trying to make one agent "perfect" instead of having 5 agents that are "good enough." The simulation's value comes from the ensemble — from the combination of agents interacting with each other and with you. One perfect agent is just a chatbot.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 10 — FINAL RECOMMENDATION
+══════════════════════════════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <h1 class="section-title">Final Recommended Path</h1>
+    <span class="section-tag tag-gold">Synthesis</span>
+  </div>
+
+  <p class="lead">Here is everything synthesized into the single clearest path. Print this and put it on your wall.</p>
+
+  <div class="final-box">
+    <h3>Final Architecture</h3>
+    <div class="final-grid">
+      <div>
+        <div class="final-item-label">Simulation Engine</div>
+        <div class="final-item-val">LangGraph</div>
+        <div class="final-item-sub">State machine + event orchestration</div>
+      </div>
+      <div>
+        <div class="final-item-label">Agent Framework</div>
+        <div class="final-item-val">Direct LLM calls</div>
+        <div class="final-item-sub">Claude 3.5 Sonnet per agent</div>
+      </div>
+      <div>
+        <div class="final-item-label">Memory</div>
+        <div class="final-item-val">pgvector + Supabase</div>
+        <div class="final-item-sub">3-tier: working / episodic / semantic</div>
+      </div>
+      <div>
+        <div class="final-item-label">Backend</div>
+        <div class="final-item-val">Python FastAPI</div>
+        <div class="final-item-sub">Async, SSE streaming</div>
+      </div>
+      <div>
+        <div class="final-item-label">Frontend</div>
+        <div class="final-item-val">Next.js 14</div>
+        <div class="final-item-sub">App Router + shadcn/ui</div>
+      </div>
+      <div>
+        <div class="final-item-label">Database + Auth</div>
+        <div class="final-item-val">Supabase</div>
+        <div class="final-item-sub">Postgres + realtime + auth</div>
+      </div>
+      <div>
+        <div class="final-item-label">Tracing</div>
+        <div class="final-item-val">LangSmith</div>
+        <div class="final-item-sub">Every LLM call traced</div>
+      </div>
+      <div>
+        <div class="final-item-label">Deployment</div>
+        <div class="final-item-val">Vercel + Railway</div>
+        <div class="final-item-sub">Frontend + backend separated</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="final-box" style="margin-top:1.5rem; background:#1a1917">
+    <h3>Final MVP Scope (First 4 weeks)</h3>
+    <p style="color:rgba(245,243,238,0.7); font-size:14px; margin:0.75rem 0 1.25rem">This is all you build for v0.1. Nothing else. Validate that the core experience works before adding anything.</p>
+    <div class="final-grid">
+      <div>
+        <div class="final-item-label">Agents</div>
+        <div class="final-item-val">Priya, Alex, Ravi, Marcus</div>
+        <div class="final-item-sub">4 personas with distinct voices</div>
+      </div>
+      <div>
+        <div class="final-item-label">Ceremonies</div>
+        <div class="final-item-val">Daily Standup only</div>
+        <div class="final-item-sub">The simplest ceremony, highest value</div>
+      </div>
+      <div>
+        <div class="final-item-label">Tickets</div>
+        <div class="final-item-val">5 hardcoded stories</div>
+        <div class="final-item-sub">Basic Kanban board</div>
+      </div>
+      <div>
+        <div class="final-item-label">Channels</div>
+        <div class="final-item-val">#general, #standup</div>
+        <div class="final-item-sub">Slack-like UI</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:3rem">The Three Rules to Finish This</h2>
+
+  <div class="card-grid-3" style="margin-top:1rem">
+    <div class="card card-accent-red">
+      <h4>Rule 1: Ship Ugly</h4>
+      <p>Your first deployed version should be embarrassing. That's correct. Embarrassing and deployed beats perfect and local by infinity.</p>
+    </div>
+    <div class="card card-accent-blue">
+      <h4>Rule 2: Fake Aggressively</h4>
+      <p>Every feature that can be hardcoded or faked without breaking the core experience — fake it. Real automation comes in the next version, after you know the design is right.</p>
+    </div>
+    <div class="card card-accent-green">
+      <h4>Rule 3: Use the Product</h4>
+      <p>Run through the simulation yourself every week. Not to test it — to experience it as a user. The moment it feels boring, your users will feel it too. That's your signal to redesign.</p>
+    </div>
+  </div>
+
+  <div class="philosophy" style="margin-top:3rem">
+    <p class="philosophy-quote">"You don't need to understand enterprise SAFe to build HealthGrid. You will understand it after building HealthGrid."</p>
+    <p class="philosophy-sub">// That's the whole point. Build the teacher.</p>
+  </div>
+
+</div>
+</div><!-- end .doc -->
+
+<script>
+function togglePhase(header) {
+  header.classList.toggle('open');
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// Open first phase by default
+document.addEventListener('DOMContentLoaded', () => {
+  const first = document.querySelector('.phase-header');
+  if (first) {
+    first.classList.add('open');
+    first.nextElementSibling.classList.add('open');
+  }
+});
+</script>
+</body>
+</html>

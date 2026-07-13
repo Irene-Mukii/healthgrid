@@ -1,0 +1,59 @@
+/* app/globals.css — Global styles for HealthGrid frontend.
+ *
+ * We set a minimal baseline here and rely on Tailwind utility classes in components.
+ * The main non-Tailwind concern is the custom scrollbar styling, which can't be
+ * done with Tailwind without a plugin.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Custom Properties ────────────────────────────────────────────────── */
+:root {
+  --font-inter: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* ── Base Resets ──────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Custom Scrollbar (Webkit/Blink) ──────────────────────────────────────── */
+/* Tailwind's scrollbar utilities require a plugin. We define them globally instead. */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a; /* slate-950 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155; /* slate-700 */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569; /* slate-600 */
+}
+
+/* ── Font Application ─────────────────────────────────────────────────────── */
+body {
+  font-family: var(--font-inter);
+}
+
+/* Apply monospace font to message content areas */
+.font-mono {
+  font-family: var(--font-mono) !important;
+}

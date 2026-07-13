@@ -1,0 +1,21 @@
+# healthgrid-backend
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment variables — NEVER commit these
+.env*
+
+# Editor/OS artifacts
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
